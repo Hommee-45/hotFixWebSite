@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -138,56 +139,75 @@ namespace HotfixFrameWork
             }
         }
 
-        public static void CopyDireToDire(string sourDir, string destDir, string  backupDir = null)
-        {
-            if (Directory.Exists(sourDir) && Directory.Exists(destDir))
-            {
-                DirectoryInfo sourDirInfo = new DirectoryInfo(sourDir);
-                FileInfo[] fileInfos = sourDirInfo.GetFiles();
-                foreach (FileInfo single in fileInfos)
-                {
-                    string sourceFile = single.FullName;
-                    Debug.Log(sourceFile);
-                }
 
-            }
-        }
+
+        ///// <summary>
+        ///// 复制文件夹
+        ///// </summary>
+        ///// <param name="sourDir">源文件(夹)</param>
+        ///// <param name="destDir">目标文件(夹)</param>
+        //public static void CopyFilesDiretionary(string sourDir, string destDir)
+        //{
+        //    string rootDir = sourDir.Substring(0, sourDir.LastIndexOf('/'));
+        //    Debug.Log("投机： " + rootDir);
+        //    if (!Directory.Exists(rootDir))
+        //    {
+        //        Debug.LogError("no such a path: " + sourDir);
+        //        return;
+        //    }
+        //    string[] directories = Directory.GetDirectories(sourDir);
+
+        //    if (directories.Length > 0)
+        //    {
+        //        foreach (string dir in directories)
+        //        {
+        //            CopyFilesDiretionary(dir, destDir + dir.Substring(dir.LastIndexOf('/')));
+        //        }
+        //    }
+        //    string[] files = Directory.GetFiles(sourDir);
+        //    Debug.Log("files.Length: " + files.Length);
+        //    if (files.Length > 0)
+        //    {
+        //        foreach (string s in files)
+        //        {
+        //            Debug.Log("source: " + s);
+        //            Debug.Log("Dest: " + destDir + s.Substring(s.LastIndexOf('/')));
+        //            File.Copy(s, destDir + s.Substring(s.LastIndexOf('/')), true);
+        //        }
+        //    }
+
+        //}
 
         /// <summary>
-        /// 复制文件夹
+        /// 复制文件夹内所有文件到另一个文件夹
         /// </summary>
-        /// <param name="sourDir">源文件(夹)</param>
-        /// <param name="destDir">目标文件(夹)</param>
-        public static void CopyFilesDiretionary(string sourDir, string destDir)
+        /// <param name="srcPath"></param>
+        /// <param name="destPath"></param>
+        public static void CopyDirectory(string srcPath, string destPath)
         {
-            string rootDir = sourDir.Substring(0, sourDir.LastIndexOf('/'));
-            Debug.Log("投机： " + rootDir);
-            if (!Directory.Exists(rootDir))
+            try
             {
-                Debug.LogError("no such a path: " + sourDir);
-                return;
-            }
-            string[] directories = Directory.GetDirectories(sourDir);
-
-            if (directories.Length > 0)
-            {
-                foreach (string dir in directories)
+                DirectoryInfo dir = new DirectoryInfo(srcPath); FileSystemInfo[] fileinfo = dir.GetFileSystemInfos();  //获取目录下（不包含子目录）的文件和子目录
+                foreach (FileSystemInfo i in fileinfo)
                 {
-                    CopyFilesDiretionary(dir, destDir + dir.Substring(dir.LastIndexOf('/')));
+                    if (i is DirectoryInfo)     //判断是否文件夹
+                    {
+                        if (!Directory.Exists(destPath + "\\" + i.Name))
+                        {
+                            Directory.CreateDirectory(destPath + "\\" + i.Name);   //目标目录下不存在此文件夹即创建子文件夹
+                        }
+                        CopyDirectory(i.FullName, destPath + "\\" + i.Name);    //递归调用复制子文件夹
+                    }
+                    else
+                    {
+                        File.Copy(i.FullName, destPath + "\\" + i.Name, true);      //不是文件夹即复制文件，true表示可以覆盖同名文件
+                    }
                 }
             }
-            string[] files = Directory.GetFiles(sourDir);
-            Debug.Log("files.Length: " + files.Length);
-            if (files.Length > 0)
+            catch (Exception e)
             {
-                foreach (string s in files)
-                {
-                    Debug.Log("source: " + s);
-                    Debug.Log("Dest: " + destDir + s.Substring(s.LastIndexOf('/')));
-                    File.Copy(s, destDir + s.Substring(s.LastIndexOf('/')), true);
-                }
+                throw;
             }
-
         }
 
 

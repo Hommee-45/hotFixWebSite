@@ -33,15 +33,13 @@ public class TestHotFIx : MonoBehaviour
     void Start()
     {
 
-        fileDownloader = GetComponent<PatchFileDownloader>();
+        //fileDownloader = GetComponent<PatchFileDownloader>();
+        fileDownloader = new PatchFileDownloader();
 
         m_LuaEnv = new LuaEnv();
         pathOffline = Path.Combine(Application.streamingAssetsPath, fileName);
         pathOnline = Path.Combine(Application.streamingAssetsPath, fileName1);
 
-        //fileDownloader.DownLoad(DownLoadUrlConfig.ANDROID_TAPTAP_ASSETSPATH, DownLoadUrlConfig.ANDROID_UPDATELIST_NAME);
-
-        //downloadVersion = new DownloadVersionFile(Path.Combine(DownLoadUrlConfig.ANDROID_TAPTAP, DownLoadUrlConfig.ANDROID_VERSION_FILENAME), GameConfig.DOWNLOAD_FAIL_COUNT, GameConfig.DOWNLOAD_FAIL_RETRY_DELAY, DownLoadVersionCompleted);
     }
 
 
@@ -68,6 +66,9 @@ public class TestHotFIx : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //协程管理器刷新
+        CoroutineManager.Instance.Tick();
+
         if (Input.GetKeyDown(KeyCode.J))
         {
             if (!isReadLua)
@@ -82,8 +83,6 @@ public class TestHotFIx : MonoBehaviour
             {
                 isReadLua = true;
                 StartCoroutine(LoadLuaFileOnline(pathOnline));
-                //StartCoroutine(LoadLerryFile(Path.Combine(Application.streamingAssetsPath, "444.txt")));
-                //StartCoroutine(LoadLerryAssetBundleFile(Path.Combine(Application.streamingAssetsPath, "enemy.ab")));
                 downloadVersion = new DownloadVersionFile(Path.Combine(DownLoadUrlConfig.ANDROID_TAPTAP, GamePathConfig.ANDROID_VERSION_FILENAME), GameConfig.DOWNLOAD_FAIL_COUNT, GameConfig.DOWNLOAD_FAIL_RETRY_DELAY, DownLoadVersionCompleted);
             }
         }
@@ -96,7 +95,7 @@ public class TestHotFIx : MonoBehaviour
         if (m_Progress != null && m_DownloadFileName != null)
         {
             m_DownloadFileName.text = fileDownloader.m_DownloadFilename;
-            m_Progress.text = fileDownloader.m_Progress.ToString();
+            m_Progress.text = fileDownloader.m_Progress;
         }
     }
 
@@ -169,39 +168,6 @@ public class TestHotFIx : MonoBehaviour
     /// <returns></returns>
     public IEnumerator LoadUnity3dFile(string savePath)
     {
-        ////WWW www = new WWW("http://localhost:81/AssetBundles");
-        //WWW www = new WWW(Path.Combine(DownLoadUrlConfig.LOCALHOST_ASSETSBUNDLE, "luatestcube.unity3d"));
-        //Debug.Log("url : " + Path.Combine(DownLoadUrlConfig.LOCALHOST_ASSETSBUNDLE, "luatestcube.unity3d"));
-        //yield return www;
-
-        //Debug.Log("luatestcube.unity3d error: " + www.error);
-        //if (www.isDone)
-        //{
-        //    byte[] bytes = www.bytes;
-        //    Debug.Log("bytes lenght: " + bytes.Length);
-        //    CreateFile(bytes, savePath);
-
-        //    // System.IO.StreamReader sr = new System.IO.StreamReader(savePath, System.Text.Encoding.UTF8);
-        //    // if (sr != null)
-        //    // {
-        //    //     m_LuaEnv.DoString(sr.ReadToEnd());
-        //    // }
-        //    // sr.Close();
-        //}
-        //else
-        //{
-        //    Debug.Log("加载失败");
-        //}
-
-
-        /************************************************************************************************************/
-        //string url = DownLoadUrlConfig.LOCAL_ASSETBUNDLES_PATH + "/luatestcube.unity3d";
-        //Debug.Log("url: " + url);
-        //UnityWebRequest request = UnityWebRequest.Get(url);
-        //yield return request.SendWebRequest();
-        //AssetBundle bundle = DownloadHandlerAssetBundle.GetContent(request);
-        //GameObject cube = bundle.LoadAsset<GameObject>("luatestcube");
-        //Instantiate(cube);
 
         //第一步加载ab文件
         AssetBundle.UnloadAllAssetBundles(true);
@@ -213,25 +179,6 @@ public class TestHotFIx : MonoBehaviour
         //ab.Unload(true);
         yield return null;
 
-        /*****************************************************************/
-        //while (Caching.ready == false)
-        //{
-        //    yield return null;
-        //}
-
-        //using (var www = WWW.LoadFromCacheOrDownload(Path.Combine(DownLoadUrlConfig.LOCALHOST_ASSETSBUNDLE, "luatestcube.unity3d"), 2))
-        //{
-        //    yield return www;
-        //    if (!string.IsNullOrEmpty(www.error))
-        //    {
-        //        Debug.Log(www.error);
-        //        yield return null;
-        //    }
-
-        //    var assetBundle = www.assetBundle;
-        //    GameObject cubePrefab = assetBundle.LoadAsset<GameObject>("luatestcube");
-        //    Instantiate(cubePrefab);
-        //}
 
 
     }

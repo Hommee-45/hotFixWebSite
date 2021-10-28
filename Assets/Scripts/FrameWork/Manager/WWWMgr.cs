@@ -7,6 +7,7 @@ public class WWWMgr : MonoBehaviour
 {
     private static WWWMgr m_Instance;
 
+
     public static WWWMgr Instance
     {
         get { return HotfixFrameWork.Util.GetInstance(ref m_Instance, "_WWWMgr"); }
@@ -15,7 +16,8 @@ public class WWWMgr : MonoBehaviour
     public void Download(string url, Action<WWW>done, float delay = 0)
     {
         if (done == null) done = (WWW www) => { };
-        StartCoroutine(IEDownload(url, done, delay));
+        //StartCoroutine(IEDownload(url, done, delay));
+        CoroutineManager.Instance.StartCoroutine(IEDownload(url, done, delay));
 
         Debug.Log("wocaonim");
     }

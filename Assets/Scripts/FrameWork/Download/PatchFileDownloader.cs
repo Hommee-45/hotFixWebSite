@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class PatchFileDownloader : MonoBehaviour
+public class PatchFileDownloader
 {
 
 
@@ -21,9 +21,9 @@ public class PatchFileDownloader : MonoBehaviour
 
     private List<PatchFileInfo> m_FileInfoList;
 
-
+    //下载更新列表文件url
     private string m_DownloadURL = "";
-
+    //更新列表txt
     private string m_UpdateList = "";
 
     //每个更新文件的描述信息
@@ -101,7 +101,9 @@ public class PatchFileDownloader : MonoBehaviour
 
         m_DownloadURL = url;
         m_UpdateList = fileName;
-        StartCoroutine(CoDownLoad(m_DownloadURL, m_UpdateList));
+
+        CoroutineManager.Instance.StartCoroutine(CoDownLoad(m_DownloadURL, m_UpdateList));
+        //StartCoroutine(CoDownLoad(m_DownloadURL, m_UpdateList));
     }
 
 
@@ -123,6 +125,7 @@ public class PatchFileDownloader : MonoBehaviour
         using (WWW www = new WWW(fullUrl))
         {
             yield return www;
+            //yield return new WaitUntil(() => www.isDone == true);
             if (www.error != null)
             {
                 //下载失败
@@ -170,11 +173,13 @@ public class PatchFileDownloader : MonoBehaviour
         {
             var info = m_FileInfoList[i];
             var fileUrl = Path.Combine(url, info.FileName);
-            StartCoroutine(CoDownloadAndWriteFile(fileUrl, info));
+            CoroutineManager.Instance.StartCoroutine(CoDownloadAndWriteFile(fileUrl, info));
+            //StartCoroutine(CoDownloadAndWriteFile(fileUrl, info));
         }
 
         //检查是否下载完成
-        StartCoroutine(CheckLoadFinish());
+        CoroutineManager.Instance.StartCoroutine(CheckLoadFinish());
+        //StartCoroutine(CheckLoadFinish());
     }
 
     /// <summary>
