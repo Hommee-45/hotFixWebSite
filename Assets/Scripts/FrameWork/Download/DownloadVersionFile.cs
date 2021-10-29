@@ -43,10 +43,10 @@ namespace HotfixFrameWork
             m_FailRetryDelay = failRetryDelay;
             m_OnCompleted = callback != null ? callback : (VersionResType t, Version v) => { };
 
-            StartDownload(0);
+            //StartDownload(0);
         }
 
-        private void StartDownload(float delay)
+        public void StartDownload(float delay)
         {
             WWWMgr.Instance.Download(m_Url, DownloadCompleted, delay);
         }
@@ -57,7 +57,7 @@ namespace HotfixFrameWork
             {
                 if (m_FailRetryCount <= 0)
                 {
-                    m_OnCompleted(VersionResType.DownloadFail, null);
+                    m_OnCompleted(VersionResType.DownloadFail, localVersion);
                     return;
                 }
                 m_FailRetryCount--;
@@ -74,7 +74,7 @@ namespace HotfixFrameWork
             remoteVersion = VersionHelp.JsonForVersion(text);
             if (remoteVersion == null)
             {
-                m_OnCompleted(VersionResType.Unusual, null);
+                m_OnCompleted(VersionResType.Unusual, localVersion);
                 return;
             }
 
@@ -85,7 +85,7 @@ namespace HotfixFrameWork
             //版本是否一致, 版本不一致的时候 的处理
             if (localVersion != null && localVersion.version != remoteVersion.version)
             {
-                m_OnCompleted(VersionResType.Different, null);
+                m_OnCompleted(VersionResType.Different, remoteVersion);
                 //TODO:
                 //应该提示UI ： 检查到新版本， 是否更新，现在是默认更新
                 goto Exit;
@@ -93,7 +93,7 @@ namespace HotfixFrameWork
             }
             else
             {
-                m_OnCompleted(VersionResType.DownloadFail, null);
+                m_OnCompleted(VersionResType.DownloadFail, localVersion);
             }
 
 
@@ -111,7 +111,7 @@ namespace HotfixFrameWork
 
             //更新本地版本文件
             //VersionHelp.WriteLocalVersionFile(remoteVersion);
-            m_OnCompleted(VersionResType.DownloadSuccess, remoteVersion);
+            //m_OnCompleted(VersionResType.DownloadSuccess, remoteVersion);
         }
 
 
@@ -121,7 +121,10 @@ namespace HotfixFrameWork
         public void UpdateWriteLocalVersionFile()
         {
             Debug.Log("覆盖写入版本文件");
+            //更新当前版本
             VersionHelp.WriteLocalVersionFile(remoteVersion);
+            localVersion = VersionHelp.GetLocalVersionForApp();
+            m_OnCompleted(VersionResType.DownloadSuccess, localVersion);
         }
     }
 }
