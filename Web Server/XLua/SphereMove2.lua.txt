@@ -1,0 +1,33 @@
+
+xlua.hotfix(CS.SphereMove, 'Move', function (self)
+    if (CS.UnityEngine.Input.GetKey(CS.UnityEngine.KeyCode.Alpha8)) then
+        self.transform.localPosition = self.transform.localPosition + CS.UnityEngine.Vector3.up * CS.UnityEngine.Time.deltaTime
+    end
+    if (CS.UnityEngine.Input.GetKey(CS.UnityEngine.KeyCode.Alpha5)) then
+        self.transform.localPosition = self.transform.localPosition + CS.UnityEngine.Vector3.down * CS.UnityEngine.Time.deltaTime
+    end
+    if (CS.UnityEngine.Input.GetKey(CS.UnityEngine.KeyCode.Alpha4)) then
+        self.transform.localPosition = self.transform.localPosition + CS.UnityEngine.Vector3.left * CS.UnityEngine.Time.deltaTime
+    end
+    if (CS.UnityEngine.Input.GetKey(CS.UnityEngine.KeyCode.Alpha6)) then
+        self.transform.localPosition = self.transform.localPosition + CS.UnityEngine.Vector3.right * CS.UnityEngine.Time.deltaTime
+    end
+end)
+
+
+
+
+xlua.hotfix(CS.SphereMove, 'Move', function (self)
+    if (CS.UnityEngine.Input.GetKey(CS.UnityEngine.KeyCode.Alpha9)) then
+        self.transform.localPosition = self.transform.localPosition + CS.UnityEngine.Vector3.up * CS.UnityEngine.Time.deltaTime
+    end
+    if (CS.UnityEngine.Input.GetKey(CS.UnityEngine.KeyCode.Alpha6)) then
+        self.transform.localPosition = self.transform.localPosition + CS.UnityEngine.Vector3.down * CS.UnityEngine.Time.deltaTime
+    end
+    if (CS.UnityEngine.Input.GetKey(CS.UnityEngine.KeyCode.Alpha5)) then
+        self.transform.localPosition = self.transform.localPosition + CS.UnityEngine.Vector3.left * CS.UnityEngine.Time.deltaTime
+    end
+    if (CS.UnityEngine.Input.GetKey(CS.UnityEngine.KeyCode.Alpha7)) then
+        self.transform.localPosition = self.transform.localPosition + CS.UnityEngine.Vector3.right * CS.UnityEngine.Time.deltaTime
+    end
+end)

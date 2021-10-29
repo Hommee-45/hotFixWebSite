@@ -1,0 +1,15 @@
+
+xlua.hotfix(CS.SphereMove, 'Move', function (self)
+    if (CS.UnityEngine.Input.GetKey(CS.UnityEngine.KeyCode.UpArrow)) then
+        self.transform.localPosition = self.transform.localPosition + CS.UnityEngine.Vector3.up * CS.UnityEngine.Time.deltaTime
+    end
+    if (CS.UnityEngine.Input.GetKey(CS.UnityEngine.KeyCode.DownArrow)) then
+        self.transform.localPosition = self.transform.localPosition + CS.UnityEngine.Vector3.down * CS.UnityEngine.Time.deltaTime
+    end
+    if (CS.UnityEngine.Input.GetKey(CS.UnityEngine.KeyCode.LeftArrow)) then
+        self.transform.localPosition = self.transform.localPosition + CS.UnityEngine.Vector3.left * CS.UnityEngine.Time.deltaTime
+    end
+    if (CS.UnityEngine.Input.GetKey(CS.UnityEngine.KeyCode.RightArrow)) then
+        self.transform.localPosition = self.transform.localPosition + CS.UnityEngine.Vector3.right * CS.UnityEngine.Time.deltaTime
+    end
+end)

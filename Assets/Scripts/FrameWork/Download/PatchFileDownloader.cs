@@ -69,6 +69,9 @@ public class PatchFileDownloader
         //合并之后，新版本ab文件的CRC
         public string OrgCRCValue { get; private set; }
 
+
+        public float FileTotalSize { get; private set; }
+
     }
 
 
@@ -168,6 +171,12 @@ public class PatchFileDownloader
         mTotalBundleCount = m_FileInfoList.Count;
 
 
+        //TODO: 界面返回 0-尚未确定 1-确定更新 -1不更新
+        //if (judge == 0) yield return null
+        //if (judge == -1) yield break;
+        //else 继续执行
+
+
         //开始下载所有文件
         for (int i = 0; i< m_FileInfoList.Count; i++)
         {
@@ -200,7 +209,6 @@ public class PatchFileDownloader
     /// <returns></returns>
     private IEnumerator CoDownloadAndWriteFile(string url, PatchFileInfo fileInfo)
     {
-        //var fileName = Path.GetFileName(fileName);
 
         using (WWW www = new WWW(url))
         {
@@ -221,11 +229,6 @@ public class PatchFileDownloader
             var writePath = DirectoryHelp.CreateDirectoryRecursive(fileInfo.RelativePath, Application.temporaryCachePath) + "/" + fileInfo.FileName;
 
             DirectoryHelp.CreateFile(www.bytes, writePath);
-
-            //if (www.assetBundle != null)
-            //{
-            //    www.assetBundle.Unload(true);
-            //}
 
             www.Dispose();
 

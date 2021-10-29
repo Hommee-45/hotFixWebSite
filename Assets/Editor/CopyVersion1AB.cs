@@ -16,25 +16,25 @@ public class CopyVersion1AB
     [MenuItem("AB包/还原文件夹/还原TempTarget文件夹至v1.0.0")]
     public static void RemakeVersion1AB()
     {
-        HotfixFrameWork.DirectoryHelp.CopyDirectory(@"D:/Web Server/v1.0.0", HotfixFrameWork.GamePathConfig.LOCAL_ANDROID_TEMP_TARGET + "/AssetBundles");
+        HotfixFrameWork.DirectoryHelp.CopyDirectory(HotfixFrameWork.GamePathConfig.LOCAL_WEB_SERVER_PATH + VERSION1_0_0, HotfixFrameWork.GamePathConfig.LOCAL_ANDROID_TEMP_TARGET + "/AssetBundles");
         SetBackVersionFile(VERSION1_0_0);
     }
     [MenuItem("AB包/还原文件夹/还原TempTarget文件夹至v1.0.1")]
     public static void RemakeVersion1_0_1AB()
     {
-        HotfixFrameWork.DirectoryHelp.CopyDirectory(@"D:/Web Server/v1.0.1", HotfixFrameWork.GamePathConfig.LOCAL_ANDROID_TEMP_TARGET + "/AssetBundles");
+        HotfixFrameWork.DirectoryHelp.CopyDirectory(HotfixFrameWork.GamePathConfig.LOCAL_WEB_SERVER_PATH + VERSION1_0_1, HotfixFrameWork.GamePathConfig.LOCAL_ANDROID_TEMP_TARGET + "/AssetBundles");
         SetBackVersionFile(VERSION1_0_1);
     }
     [MenuItem("AB包/还原文件夹/还原TempTarget文件夹至v1.0.2")]
     public static void RemakeVersion1_0_2AB()
     {
-        HotfixFrameWork.DirectoryHelp.CopyDirectory(@"D:/Web Server/v1.0.1", HotfixFrameWork.GamePathConfig.LOCAL_ANDROID_TEMP_TARGET + "/AssetBundles");
+        HotfixFrameWork.DirectoryHelp.CopyDirectory(HotfixFrameWork.GamePathConfig.LOCAL_WEB_SERVER_PATH + VERSION1_0_2, HotfixFrameWork.GamePathConfig.LOCAL_ANDROID_TEMP_TARGET + "/AssetBundles");
         SetBackVersionFile(VERSION1_0_2);
     }
     [MenuItem("AB包/还原文件夹/还原TempTarget文件夹至v1.0.3")]
     public static void RemakeVersion1_0_3AB()
     {
-        HotfixFrameWork.DirectoryHelp.CopyDirectory(@"D:/Web Server/v1.0.1", HotfixFrameWork.GamePathConfig.LOCAL_ANDROID_TEMP_TARGET + "/AssetBundles");
+        HotfixFrameWork.DirectoryHelp.CopyDirectory(HotfixFrameWork.GamePathConfig.LOCAL_WEB_SERVER_PATH + VERSION1_0_3, HotfixFrameWork.GamePathConfig.LOCAL_ANDROID_TEMP_TARGET + "/AssetBundles");
         SetBackVersionFile(VERSION1_0_3);
     }
 

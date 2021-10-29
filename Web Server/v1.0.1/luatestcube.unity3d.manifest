@@ -1,0 +1,35 @@
+ManifestFileVersion: 0
+CRC: 2537001130
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: f8c786f74951149088e6238cc544d90a
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: c23e721769fb47468a67df9c4012d813
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+Assets:
+- Assets/Materials/abCubeMat1.mat
+- Assets/Textures/distortion.jpg
+- Assets/Materials/abCube.mat
+- Assets/Prefabs/exCube.prefab
+Dependencies: []

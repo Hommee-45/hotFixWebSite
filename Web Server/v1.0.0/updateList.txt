@@ -1,0 +1,4 @@
+AssetBundles|AssetBundles/AssetBundles
+AssetBundles.manifest|AssetBundles/AssetBundles.manifest
+luaestcube.unity3d|AssetBundles/luaestcube.unity3d
+luaestcube.unity3d.manifest|AssetBundles/luaestcube.unity3d.manifest
