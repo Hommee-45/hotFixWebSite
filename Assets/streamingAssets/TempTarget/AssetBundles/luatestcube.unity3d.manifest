@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 4198497865
+CRC: 1282065562
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 89877dafd06bbede07f33b2b2de82961
+    Hash: 5e94c92be70145f66ca682d814dfa09c
   TypeTreeHash:
     serializedVersion: 2
     Hash: c23e721769fb47468a67df9c4012d813
@@ -28,5 +28,7 @@ ClassTypes:
 - Class: 65
   Script: {instanceID: 0}
 Assets:
+- Assets/Textures/distortion.jpg
+- Assets/Materials/abCube.mat
 - Assets/Prefabs/exCube.prefab
 Dependencies: []

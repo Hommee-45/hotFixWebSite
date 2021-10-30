@@ -43,21 +43,21 @@ public class TestHotFIx : MonoBehaviour
     }
 
 
-    private void DownLoadVersionCompleted(VersionResType type, Version version)
+    private void DownLoadVersionCompleted(DownloadResType type, Version version)
     {
         switch (type)
         {
-            case VersionResType.DownloadFail:
+            case DownloadResType.DownloadFail:
                 Debug.Log("Version 下载失败  可能是版本是最新版");
                 break;
-            case VersionResType.DownloadSuccess:
+            case DownloadResType.DownloadSuccess:
                 Debug.Log("Version 更新成功");
                 break;
-            case VersionResType.Different:
+            case DownloadResType.Different:
                 Debug.Log("Version 版本不同");
-                fileDownloader.DownLoad(Path.Combine(DownLoadUrlConfig.ANDROID_TAPTAP_ASSETSPATH, GamePathConfig.VERISION_DIFF_FILEDICT), GamePathConfig.ANDROID_UPDATELIST_NAME, downloadVersion.UpdateWriteLocalVersionFile);
+                fileDownloader.DownLoad(Path.Combine(DownLoadUrlConfig.ANDROID_TAPTAP_ASSETSPATH, GamePathConfig.VERISION_DIFF_FILENAME), GamePathConfig.ANDROID_UPDATELIST_NAME, downloadVersion.UpdateWriteLocalVersionFile);
                 break;
-            case VersionResType.Unusual:
+            case DownloadResType.Unusual:
                 Debug.Log("Version 解析异常");
                 break;
         }

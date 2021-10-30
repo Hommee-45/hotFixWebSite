@@ -16,8 +16,10 @@ namespace HotfixFrameWork
         /// 更新npc的动作
         /// </summary>
         /// <param name="person"></param>
-        public void Update(Object person)
+        public void Update(Object person = null)
         {
+            if (m_CurrentStateID == StateID.DownloadTerminate || m_CurrentStateID == StateID.DownloadFinished)
+                return;
             m_CurrentState.Act(person);
             m_CurrentState.Reason(person);
         }
@@ -97,6 +99,14 @@ namespace HotfixFrameWork
             m_CurrentState = state;
             m_CurrentStateID = state.StateID;
             m_CurrentState.DoBeforeEnter();
+        }
+
+
+        public void UnRegisterFSM()
+        {
+            m_StateDic.Clear();
+            m_CurrentStateID = StateID.NullState;
+            m_CurrentState = null;
         }
     }
 

@@ -49,7 +49,7 @@ namespace HotfixFrameWork
         {
             var list = relativePath.Split('/');
             //var temp = Application.temporaryCachePath;
-            Debug.Log("tempDir: " + rootDir);
+            //Debug.Log("tempDir: " + rootDir);
             //var temp = DownLoadUrlConfig.LOCAL_ANDROID_PATH;
 
             //Length - 1 是为了不让没有子文件夹的相对路径进入循环

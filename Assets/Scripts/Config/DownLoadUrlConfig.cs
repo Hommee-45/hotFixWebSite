@@ -54,6 +54,6 @@ namespace HotfixFrameWork
 
         public const string ANDROID_VERSION_FILENAME = "version.txt";
 
-        public static string VERISION_DIFF_FILEDICT = "";
+        public static string VERISION_DIFF_FILENAME = "";
     }
 }

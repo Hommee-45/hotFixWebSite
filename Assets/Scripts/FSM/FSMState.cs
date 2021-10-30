@@ -4,6 +4,15 @@ using UnityEngine;
 
 namespace HotfixFrameWork
 {
+    /// <summary>
+    /// 下载状态
+    /// </summary>
+    public enum FSMDownloadState
+    {
+        DownloadFail = -1,
+        Downloading = 0,
+        DownSuccess = 1
+    }
 
 
     /// <summary>
@@ -44,6 +53,7 @@ namespace HotfixFrameWork
         VerifyFileIntegrity,        //校验文件完整
         MergeDiffFile,              //合并差分文件
 
+        DownloadTerminate,          //终止下载(一般指下载失败)
         DownloadFinished,           //所有下载完成
     }
 
@@ -84,6 +94,7 @@ namespace HotfixFrameWork
                 Debug.LogError("this key has already in dict");
                 return;
             }
+            m_TransitionStateDict.Add(trans, id);
         }
 
         /// <summary>

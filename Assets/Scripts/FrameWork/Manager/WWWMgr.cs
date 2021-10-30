@@ -16,10 +16,16 @@ public class WWWMgr : MonoBehaviour
     public void Download(string url, Action<WWW>done, float delay = 0)
     {
         if (done == null) done = (WWW www) => { };
-        //StartCoroutine(IEDownload(url, done, delay));
         CoroutineManager.Instance.StartCoroutine(IEDownload(url, done, delay));
 
-        Debug.Log("wocaonim");
+    }
+
+    public void DownloadCorotine(IEnumerator downloader)
+    {
+        if (downloader != null)
+        {
+            CoroutineManager.Instance.StartCoroutine(downloader);
+        }
     }
 
     
