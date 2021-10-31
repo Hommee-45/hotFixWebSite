@@ -29,12 +29,14 @@ public class TestHotFIx : MonoBehaviour
     private bool isReadLua = false;
 
 
+    private testFSM m_TestFSM;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        m_TestFSM = GetComponent<testFSM>();
         //fileDownloader = GetComponent<PatchFileDownloader>();
-        fileDownloader = new PatchFileDownloader();
+        //fileDownloader = new PatchFileDownloader();
 
         m_LuaEnv = new LuaEnv();
         pathOffline = Path.Combine(Application.streamingAssetsPath, fileName);
@@ -55,7 +57,7 @@ public class TestHotFIx : MonoBehaviour
                 break;
             case DownloadResType.Different:
                 Debug.Log("Version 版本不同");
-                fileDownloader.DownLoad(Path.Combine(DownLoadUrlConfig.ANDROID_TAPTAP_ASSETSPATH, GamePathConfig.VERISION_DIFF_FILENAME), GamePathConfig.ANDROID_UPDATELIST_NAME, downloadVersion.UpdateWriteLocalVersionFile);
+                //fileDownloader.DownLoad(Path.Combine(DownLoadUrlConfig.ANDROID_TAPTAP_ASSETSPATH, GamePathConfig.VERISION_DIFF_FILENAME), GamePathConfig.ANDROID_UPDATELIST_NAME, downloadVersion.UpdateWriteLocalVersionFile);
                 break;
             case DownloadResType.Unusual:
                 Debug.Log("Version 解析异常");
@@ -83,7 +85,8 @@ public class TestHotFIx : MonoBehaviour
             {
                 isReadLua = true;
                 StartCoroutine(LoadLuaFileOnline(pathOnline));
-                downloadVersion = new DownloadVersionFile(Path.Combine(DownLoadUrlConfig.ANDROID_TAPTAP, GamePathConfig.ANDROID_VERSION_FILENAME), GameConfig.DOWNLOAD_FAIL_COUNT, GameConfig.DOWNLOAD_FAIL_RETRY_DELAY, DownLoadVersionCompleted);
+                m_TestFSM.enabled = true;
+                //downloadVersion = new DownloadVersionFile(Path.Combine(DownLoadUrlConfig.ANDROID_TAPTAP, GamePathConfig.ANDROID_VERSION_FILENAME), GameConfig.DOWNLOAD_FAIL_COUNT, GameConfig.DOWNLOAD_FAIL_RETRY_DELAY, DownLoadVersionCompleted);
             }
         }
         if (Input.GetKeyDown(KeyCode.K))
@@ -94,8 +97,8 @@ public class TestHotFIx : MonoBehaviour
 
         if (m_Progress != null && m_DownloadFileName != null)
         {
-            m_DownloadFileName.text = fileDownloader.m_DownloadFilename;
-            m_Progress.text = fileDownloader.m_Progress;
+            //m_DownloadFileName.text = fileDownloader.m_DownloadFilename;
+            //m_Progress.text = fileDownloader.m_Progress;
         }
     }
 

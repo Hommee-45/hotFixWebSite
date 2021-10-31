@@ -16,6 +16,8 @@ namespace HotfixFrameWork
         Different,
 
         Unusual,
+
+        LatestVersion,
     }
     #region 下载版本文件 DownloadVersionFile
     public class Version
@@ -32,21 +34,19 @@ namespace HotfixFrameWork
 
         private float m_FailRetryDelay;
 
-        private Action<DownloadResType, Version> m_OnCompleted;
+        private Action<DownloadResType, Version, Version> m_OnCompleted;
 
         //服务器版本文件信息
         private Version remoteVersion;
         //本地版本信息文件
         private Version localVersion;
 
-        public DownloadVersionFile(string url, int failRetryCount, float failRetryDelay, Action<DownloadResType, Version> callback)
+        public DownloadVersionFile(string url, int failRetryCount, float failRetryDelay, Action<DownloadResType, Version, Version> callback)
         {
             m_Url = url;
             m_FailRetryCount = failRetryCount;
             m_FailRetryDelay = failRetryDelay;
-            m_OnCompleted = callback != null ? callback : (DownloadResType t, Version v) => { };
-
-            //StartDownload(0);
+            m_OnCompleted = callback != null ? callback : (DownloadResType t, Version v, Version s) => { };
         }
 
         public void StartDownload(float delay)
@@ -61,7 +61,7 @@ namespace HotfixFrameWork
                 if (m_FailRetryCount <= 0)
                 {
                     Debug.Log("DownloadVersionFile Retrying!!!  Remain Time: " + m_FailRetryCount);
-                    m_OnCompleted(DownloadResType.DownloadFail, localVersion);
+                    m_OnCompleted(DownloadResType.DownloadFail, localVersion, remoteVersion);
                     return;
                 }
                 m_FailRetryCount--;
@@ -78,27 +78,28 @@ namespace HotfixFrameWork
             remoteVersion = VersionHelp.JsonForVersion(text);
             if (remoteVersion == null)
             {
-                m_OnCompleted(DownloadResType.Unusual, localVersion);
+                m_OnCompleted(DownloadResType.Unusual, localVersion, remoteVersion);
                 return;
             }
 
             //获取本地版本文件
             localVersion = VersionHelp.GetLocalVersionForApp();
+            //赋值给全局版本
+            GameConfig.g_LocalVersion = localVersion;
             //更改下载版本文件配置
             GamePathConfig.VERISION_DIFF_FILENAME = localVersion.version + "-" + remoteVersion.version;
             //版本是否一致, 版本不一致的时候 的处理
             if (localVersion != null && localVersion.version != remoteVersion.version)
             {
-                //m_OnCompleted(VersionResType.Different, remoteVersion);
-                m_OnCompleted(DownloadResType.DownloadSuccess, remoteVersion);
+                m_OnCompleted(DownloadResType.DownloadSuccess, localVersion, remoteVersion);
                 //TODO:
                 //应该提示UI ： 检查到新版本， 是否更新，现在是默认更新
                 goto Exit;
                 //return;
             }
-            else
+            else if (localVersion != null && localVersion.version == remoteVersion.version)
             {
-                m_OnCompleted(DownloadResType.DownloadFail, localVersion);
+                m_OnCompleted(DownloadResType.LatestVersion, localVersion, remoteVersion);
             }
 
 
@@ -113,7 +114,7 @@ namespace HotfixFrameWork
             {
                 return;
             }
-
+            GameConfig.g_LocalVersion = remoteVersion;
             //更新本地版本文件
             //VersionHelp.WriteLocalVersionFile(remoteVersion);
             //m_OnCompleted(VersionResType.DownloadSuccess, remoteVersion);
@@ -123,13 +124,11 @@ namespace HotfixFrameWork
         /// <summary>
         /// 更新本地版本文件
         /// </summary>
-        public void UpdateWriteLocalVersionFile()
+        public static void UpdateWriteLocalVersionFile()
         {
             Debug.Log("覆盖写入版本文件");
             //更新当前版本
-            VersionHelp.WriteLocalVersionFile(remoteVersion);
-            localVersion = VersionHelp.GetLocalVersionForApp();
-            m_OnCompleted(DownloadResType.DownloadSuccess, localVersion);
+            VersionHelp.WriteLocalVersionFile(GameConfig.g_LocalVersion);
         }
     }
 
@@ -188,11 +187,58 @@ namespace HotfixFrameWork
 
     #region 差分文件下载器
 
+
+
+    public class DiffFileInfo
+    {
+
+        //文件名
+        public string FileName { get; private set; }
+        //文件相对目录
+        public string RelativePath { get; private set; }
+        //下载差分文件(加压加密过的diff文件)
+        public string DownloadCRCValue { get; private set; }
+        //解压解密差分文件后的CRC
+        public string UnzipFileCRCValue { get; private set; }
+        //合并之后，新版资源文件的CRC
+        public string OriginCRCValue { get; private set; }
+        //文件大小
+        public float FileSize { get; private set; }
+        //str 的 格式是 url.txt|dir/a.txt
+        public DiffFileInfo(string str, int failRetryCount)
+        {
+            Parse(str);
+        }
+
+        protected virtual void Parse(string str)
+        {
+            var val = str.Split('|');
+            if (val.Length == 1)
+            {
+                FileName = val[0];
+                RelativePath = val[0];
+            }
+            else if (val.Length == 2)
+            {
+                FileName = val[0];
+                RelativePath = val[1];
+            }
+            else
+            {
+                Debug.Log("PatchFileInfo parse error");
+            }
+        }
+
+
+    }
+
     public class DownloadDiffFile
     {
         #region public变量
         //是否下载完成
         public bool m_IsDownloadFinish = false;
+        //是否下载失败
+        public bool m_IsDownloadFailed = false;
         //下载进度
         public string m_Progress;
         public string m_DownloadFilename;
@@ -207,65 +253,7 @@ namespace HotfixFrameWork
 
         #region private/protected
         //每个更新文件的描述信息
-        protected class DiffFileInfo
-        {
-            private int m_FailRetryCount;
-            
 
-
-            //文件名
-            public string FileName { get; private set; }
-            //文件相对目录
-            public string RelativePath { get; private set; }
-            //下载差分文件(加压加密过的diff文件)
-            public string DownloadCRCValue { get; private set; }
-            //解压解密差分文件后的CRC
-            public string UnzipFileCRCValue { get; private set; }
-            //合并之后，新版资源文件的CRC
-            public string OriginCRCValue { get; private set; }
-            //文件大小
-            public float FileSize { get; private set; }
-            //str 的 格式是 url.txt|dir/a.txt
-            public DiffFileInfo(string str, int failRetryCount)
-            {
-                Parse(str);
-                m_FailRetryCount = failRetryCount;
-            }
-
-            public int FailRetryCount
-            {
-                get
-                {
-                    return m_FailRetryCount;
-                }
-                set
-                {
-                    m_FailRetryCount = value;
-                }
-            }
-
-
-            protected virtual void Parse(string str)
-            {
-                var val = str.Split('|');
-                if (val.Length == 1)
-                {
-                    FileName = val[0];
-                    RelativePath = val[0];
-                }
-                else if (val.Length == 2)
-                {
-                    FileName = val[0];
-                    RelativePath = val[1];
-                }
-                else
-                {
-                    Debug.Log("PatchFileInfo parse error");
-                }
-            }
-
-
-        }
         //下载完成回调1
         private Action<DownloadResType> m_OnCompleted;
         //总共要下载的bundle个数
@@ -308,11 +296,12 @@ namespace HotfixFrameWork
             m_BundleCount = 0;
             m_TotalBundleCount = 0;
             m_OnCompleted = complete != null ? complete : (DownloadResType v) => { };
-            m_OnDownLoadOver += (bool v) => { m_IsDownloadFinish = v; Debug.Log("==============差分文件下载完成： " + m_IsDownloadFinish); };
-            //m_OnDownLoadOver += MergeDiffToTarget;
+            m_OnDownLoadOver += (bool v) => { Debug.Log("==============差分文件下载完成： " + v); };
             m_DownloadURL = url;
             m_FailRetryCount = failRetryCount;
             m_FailRetryDelay = failRetryDelay;
+            m_IsDownloadFailed = false;
+            m_IsDownloadFinish = false;
         }
 
         /// <summary>
@@ -322,8 +311,6 @@ namespace HotfixFrameWork
         /// <param name="complete">完成回调</param>
         public void Download()
         {
-            //WWWMgr.Instance.DownloadCorotine(CoDownload(m_DownloadURL));
-            //WWWMgr.Instance.DownloadCorotine(m_CoDownload);
             m_CoDownload = CoroutineManager.Instance.StartCoroutine(CoDownload(m_DownloadURL));
         }
 
@@ -388,6 +375,7 @@ namespace HotfixFrameWork
         /// <returns></returns>
         private IEnumerator CoDownloadAndWriteFile(string url, DiffFileInfo fileInfo)
         {
+            if (m_IsDownloadFailed) yield break;
             yield return new WaitForSeconds(m_FailRetryDelay);
             using (WWW www = new WWW(url))
             {
@@ -395,12 +383,13 @@ namespace HotfixFrameWork
                 {
                     m_DownloadFilename = fileInfo.FileName;
                     m_Progress = (((int)(www.progress * 100)) % 100) + "%";
-                    yield return 1;
+                    yield return null;
                 }
                 m_Progress = FINISH_PROGRESS;
                 if (www.error != null)
                 {
                     DownloadSingleRerty(url, fileInfo);
+                    //WWWMgr.Instance.DownRetryFiffFile(url, DownloadCompleted, 0);
                     Debug.LogError(string.Format("read {0} failed: {1}", url, www.error));
                     yield break;
                 }
@@ -432,17 +421,20 @@ namespace HotfixFrameWork
         /// <param name="fileInfo"></param>
         private void DownloadSingleRerty(string url, DiffFileInfo fileInfo)
         {
-            if (fileInfo.FailRetryCount <= 0)
+            if (m_FailRetryCount <= 0)
             {//重试单个文件下载三次失败
+                m_IsDownloadFailed = true;
                 CoroutineManager.Instance.StopCoroutine(m_CoDownload);
                 m_OnCompleted(DownloadResType.DownloadFail);
-                return;
+                goto Exit0;
             }
-            Debug.LogError("url RemainRetry Time: " + fileInfo.FailRetryCount);
-            fileInfo.FailRetryCount--;
+            Debug.LogError("url RemainRetry Time: " + m_FailRetryCount);
+            m_FailRetryCount--;
             CoDownloadAndWriteFile(url, fileInfo);
+        Exit0:
             return;
         }
+
 
 
         /// <summary>
@@ -462,6 +454,8 @@ namespace HotfixFrameWork
                     m_OnDownLoadOver?.Invoke(true);
 
                     m_OnCompleted?.Invoke(DownloadResType.DownloadSuccess);
+
+                    GameConfig.g_FileInfoList = m_FileInfoList;
                 }
                 catch (Exception e)
                 {
@@ -504,48 +498,7 @@ namespace HotfixFrameWork
         }
 
 
-        /// <summary>
-        /// 下载完成之后的回调，合并VCDiff与本地生成新版本文件
-        /// </summary>
-        /// <param name="isSuc">是否进行合并</param>
-        /// <param name="complete">完成回调</param>
-        private void MergeDiffToTarget(bool isSuc)
-        {
-            if (!isSuc)
-            {
-                return;
-            }
 
-            //DirectoryHelp.CleanDirectory(GamePathConfig.LOCAL_ANDROID_TEMP_TARGET_1);
-            foreach (DiffFileInfo fileSingle in m_FileInfoList)
-            {
-                //本来资源路径
-                string localFilePath = Path.Combine(GamePathConfig.LOCAL_ANDROID_TEMP_TARGET, fileSingle.RelativePath);
-                //目标资源路径
-                string targetFilePath = DirectoryHelp.CreateDirectoryRecursiveInclude(fileSingle.RelativePath, GamePathConfig.LOCAL_ANDROID_TEMP_TARGET_1);
-                //差分文件路径
-                string diffFilePath = Path.Combine(DirectoryHelp.CreateDirectoryRecursive(fileSingle.RelativePath, Application.temporaryCachePath), fileSingle.FileName);
-
-
-
-                Debug.Log("diffFile url: " + diffFilePath);
-                Debug.Log("localFilePath: " + localFilePath);
-                Debug.Log("targetFilePath: " + targetFilePath);
-
-                if (!VCDiffHelp.DoDecode(localFilePath, diffFilePath, targetFilePath))
-                {
-                    Debug.LogError("合并出错");
-                    goto Exit0;
-                }
-                DirectoryHelp.CopyFile(targetFilePath, localFilePath);
-
-            }
-            //DirectoryHelp.CleanDirectory(Application.temporaryCachePath);
-            //完成回调
-            //m_OnCompleted();
-        Exit0:
-            DirectoryHelp.CleanDirectory(Application.temporaryCachePath);
-        }
     }
 
 

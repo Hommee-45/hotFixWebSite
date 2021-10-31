@@ -78,10 +78,6 @@ namespace HotfixFrameWork
         public static string CreateDirectoryRecursiveInclude(string relativePath, string rootDir)
         {
             var list = relativePath.Split('/');
-            //var temp = Application.temporaryCachePath;
-            Debug.Log("rootDir: " + rootDir);
-            //var temp = DownLoadUrlConfig.LOCAL_ANDROID_PATH;
-
             //Length - 1 是为了不让没有子文件夹的相对路径进入循环
             for (int i = 0; i < list.Length - 1; i++)
             {
@@ -220,7 +216,6 @@ namespace HotfixFrameWork
         public static void CopyFile(string sourDir, string destDir)
         {
             string rootDir = sourDir.Substring(0, sourDir.LastIndexOf('/'));
-            Debug.Log("投机： " + rootDir);
             if (!Directory.Exists(rootDir))
             {
                 Debug.LogError("no such a path: " + sourDir);

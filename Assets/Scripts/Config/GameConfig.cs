@@ -14,6 +14,11 @@ namespace HotfixFrameWork
         /// version || md5file 下载失败延迟重试时间 秒
         /// </summary>
         public const int DOWNLOAD_FAIL_RETRY_DELAY = 2;
+
+
+        public static List<DiffFileInfo> g_FileInfoList = new List<DiffFileInfo>();
+
+        public static Version g_LocalVersion;
     }
 }
 

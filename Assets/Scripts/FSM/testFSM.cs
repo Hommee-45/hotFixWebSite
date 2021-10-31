@@ -19,15 +19,20 @@ public class testFSM : MonoBehaviour
         //拉取版本文件
         DownloadVerState downloadVerState = new DownloadVerState(m_FSMSystem);
         downloadVerState.AddTransition(Transition.Download_Success, StateID.DownloadUpdateListFile);
-        downloadVerState.AddTransition(Transition.Download_Failed, StateID.DownloadVersionFile);
+        downloadVerState.AddTransition(Transition.Download_Failed, StateID.DownloadTerminate);
         //拉取更新配置表文件
         DownloadUpdateListState downloadUpdateListState = new DownloadUpdateListState(m_FSMSystem);
         downloadUpdateListState.AddTransition(Transition.Download_Success, StateID.DownloadDiffFile);
         downloadUpdateListState.AddTransition(Transition.Download_Failed, StateID.DownloadUpdateListFile);
         //下载差分文件
         DownDiffFileState downDiffFileState = new DownDiffFileState(m_FSMSystem);
-        downDiffFileState.AddTransition(Transition.Download_Success, StateID.DownloadTerminate);
+        downDiffFileState.AddTransition(Transition.Download_Success, StateID.MergeDiffFile);
         downDiffFileState.AddTransition(Transition.Download_Failed, StateID.DownloadDiffFile);
+
+        //合并差分文件
+        MergeDiffFileState mergeDiffFileState = new MergeDiffFileState(m_FSMSystem);
+        mergeDiffFileState.AddTransition(Transition.MergeDiffFileSuccess, StateID.DownloadTerminate);
+        mergeDiffFileState.AddTransition(Transition.MergeDiffFileFailed, StateID.MergeDiffFile);
 
         //下载终止状态
         DownloadTerminateState downloadTerminateState = new DownloadTerminateState(m_FSMSystem);
@@ -35,6 +40,7 @@ public class testFSM : MonoBehaviour
         m_FSMSystem.AddState(downloadUpdateListState);
         m_FSMSystem.AddState(downloadTerminateState);
         m_FSMSystem.AddState(downDiffFileState);
+        m_FSMSystem.AddState(mergeDiffFileState);
 
 
     }

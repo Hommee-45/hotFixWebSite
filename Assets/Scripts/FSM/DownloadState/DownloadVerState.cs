@@ -80,29 +80,33 @@ namespace HotfixFrameWork
         }
 
 
-        private void DownLoadVersionCompleted(DownloadResType type, Version version)
+        private void DownLoadVersionCompleted(DownloadResType type, Version localVersion, Version remoteVersion)
         {
             m_IsCallback = true;
             switch (type)
             {
                 case DownloadResType.DownloadFail:
-                    Debug.Log("===============Version 下载失败  可能是版本是最新版, 当前版本为： " + version.version);
+                    Debug.Log("===============Version 下载失败 当前版本为： " + localVersion.version);
                     downloadState = FSMDownloadState.DownloadFail;
                     break;
                 case DownloadResType.DownloadSuccess:
-                    Debug.Log("===============Version 版本拉取成功 最新版本为：" + version.version);
+                    Debug.Log("===============Version 版本拉取成功 当前版本为： " + localVersion.version + " 最新版本为： " + remoteVersion.version);
                     downloadState = FSMDownloadState.DownSuccess;
                     break;
                 case DownloadResType.Different:
-                    Debug.Log("===============Version 版本不同 最新版本为： " + version.version);
+                    Debug.Log("===============Version 版本不同 最新版本为： " + localVersion.version);
                     break;
                 case DownloadResType.Unusual:
-                    if (version != null)
+                    if (localVersion != null && remoteVersion != null)
                     {
-                        Debug.Log("===============Version 解析异常 当前版本为： " + version.version);
+                        Debug.Log("===============Version 解析异常 当前版本为： " + localVersion.version);
                     }
                     else
                         Debug.Log("===============Version 解析异常");
+                    break;
+                case DownloadResType.LatestVersion:
+                    Debug.Log("===============Version 无需下载 当前版本为： " + localVersion.version + " 最新版本为： " + remoteVersion.version);
+                    downloadState = FSMDownloadState.DownloadFail;
                     break;
             }
         }
