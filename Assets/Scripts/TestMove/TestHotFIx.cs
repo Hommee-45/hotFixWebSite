@@ -171,18 +171,10 @@ public class TestHotFIx : MonoBehaviour
     /// <returns></returns>
     public IEnumerator LoadUnity3dFile(string savePath)
     {
-
-        //第一步加载ab文件
-        AssetBundle.UnloadAllAssetBundles(true);
-        AssetBundle ab = AssetBundle.LoadFromFile(Path.Combine(GamePathConfig.LOCAL_ANDROID_TEMP_TARGET, "AssetBundles/luatestcube.unity3d"));
-        Debug.Log("url: " + GamePathConfig.LOCAL_ASSETBUNDLES_PATH + "/luatestcube.unity3d");
-        //第二部加载资源
-        GameObject sp = ab.LoadAsset<GameObject>("exCube");
-        Instantiate(sp);
-        //ab.Unload(true);
+        GameObject cubePre = LoadABManager.Instance.LoadAssetByAB<GameObject>("luatestcube.unity3d", "exCube");
+        if (cubePre != null) Instantiate(cubePre);
+        LoadABManager.Instance.UnloadAssetBundle("luatestcube.unity3d", false);
         yield return null;
-
-
 
     }
 

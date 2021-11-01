@@ -27,7 +27,7 @@ public class testFSM : MonoBehaviour
         //下载差分文件
         DownDiffFileState downDiffFileState = new DownDiffFileState(m_FSMSystem);
         downDiffFileState.AddTransition(Transition.Download_Success, StateID.MergeDiffFile);
-        downDiffFileState.AddTransition(Transition.Download_Failed, StateID.DownloadDiffFile);
+        downDiffFileState.AddTransition(Transition.Download_Failed, StateID.DownloadTerminate);
 
         //合并差分文件
         MergeDiffFileState mergeDiffFileState = new MergeDiffFileState(m_FSMSystem);

@@ -47,8 +47,11 @@ namespace HotfixFrameWork
 
         public static string LOCAL_WEB_SERVER_PATH = Application.dataPath.Substring(0, Application.dataPath.Length - 6) + "Web Server/";
 
-        public static string LOCAL_ASSETBUNDLES_PATH = Application.streamingAssetsPath + "/Android/AssetBundles";
-
+#if UNITY_EDITOR
+        public static string LOCAL_ASSETBUNDLES_PATH = Application.streamingAssetsPath + "/TempTarget/AssetBundles/";
+#elif UNITY_ANDROID
+        public static string LOCAL_ASSETBUNDLES_PATH = Application.streamingAssetsPath + "/Android/AssetBundles/";
+#endif
 
         public const string ANDROID_UPDATELIST_NAME = "updateList2019.txt";
 
