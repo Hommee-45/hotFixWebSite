@@ -19,7 +19,7 @@ namespace HotfixFrameWork
         //版本文件下载
         private DownloadUpdateListFile m_DownLoadUpdateListFile;
 
-        public DownloadUpdateListState(FSMSystem fsmSystem) : base(fsmSystem)
+        public DownloadUpdateListState(FSMSystemManager fsmSystem) : base(fsmSystem)
         {
             m_StateID = StateID.DownloadUpdateListFile;
         }
@@ -29,7 +29,7 @@ namespace HotfixFrameWork
             if (m_DownLoadUpdateListFile == null)
             {
                 m_DownLoadUpdateListFile = new DownloadUpdateListFile(
-                    Path.Combine(DownLoadUrlConfig.ANDROID_TAPTAP_ASSETSPATH, GamePathConfig.VERISION_DIFF_FILENAME, GamePathConfig.ANDROID_UPDATELIST_NAME),
+                    Path.Combine(DownLoadUrlConfig.ANDROID_TAPTAP_ASSETSPATH, GlobalVariable.VERISION_DIFF_FILENAME, GamePathConfig.ANDROID_UPDATELIST_NAME),
                     GameConfig.DOWNLOAD_FAIL_COUNT,
                     GameConfig.DOWNLOAD_FAIL_RETRY_DELAY,
                     DownLoadUpdateListCompleted);
@@ -47,7 +47,7 @@ namespace HotfixFrameWork
                 if (m_DownLoadUpdateListFile == null)
                 {
                     m_DownLoadUpdateListFile = new DownloadUpdateListFile(
-                        Path.Combine(DownLoadUrlConfig.ANDROID_TAPTAP_ASSETSPATH, GamePathConfig.VERISION_DIFF_FILENAME, GamePathConfig.ANDROID_UPDATELIST_NAME), 
+                        Path.Combine(DownLoadUrlConfig.ANDROID_TAPTAP_ASSETSPATH, GlobalVariable.VERISION_DIFF_FILENAME, GamePathConfig.ANDROID_UPDATELIST_NAME), 
                         GameConfig.DOWNLOAD_FAIL_COUNT, 
                         GameConfig.DOWNLOAD_FAIL_RETRY_DELAY,
                         DownLoadUpdateListCompleted);

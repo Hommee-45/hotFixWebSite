@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.IO;
+using System.Text;
 using XLua;
 using HotfixFrameWork;
 using UnityEngine.UI;
@@ -42,6 +43,8 @@ public class TestHotFIx : MonoBehaviour
         pathOffline = Path.Combine(Application.streamingAssetsPath, fileName);
         pathOnline = Path.Combine(Application.streamingAssetsPath, fileName1);
 
+
+        Debug.Log("string path: " + GetLuaPath("/AB_Lua"));
     }
 
 
@@ -57,7 +60,6 @@ public class TestHotFIx : MonoBehaviour
                 break;
             case DownloadResType.Different:
                 Debug.Log("Version 版本不同");
-                //fileDownloader.DownLoad(Path.Combine(DownLoadUrlConfig.ANDROID_TAPTAP_ASSETSPATH, GamePathConfig.VERISION_DIFF_FILENAME), GamePathConfig.ANDROID_UPDATELIST_NAME, downloadVersion.UpdateWriteLocalVersionFile);
                 break;
             case DownloadResType.Unusual:
                 Debug.Log("Version 解析异常");
@@ -256,5 +258,19 @@ public class TestHotFIx : MonoBehaviour
     }
 
 
+
+    public static string GetLuaPath(string path)
+    {
+        if (path.IndexOf(GamePathConfig.ANDROID_LUA_HOTFIX_FOLDERNAME) == -1)
+        {
+            StringBuilder sb = new StringBuilder(path);
+            path = sb.Replace("/", "/" + GamePathConfig.ANDROID_LUA_HOTFIX_FOLDERNAME + "/", path.IndexOf('/'), 1).ToString();
+        }
+        path = string.Format("{0}/{1}{2}", GamePathConfig.LOCAL_ANDROID_TEMP_TARGET, path, ".lua");
+        return path;
+    }
+
+
+    
 
 }

@@ -5,12 +5,58 @@ using UnityEngine;
 namespace HotfixFrameWork
 {
 
-    public class FSMSystem
+    public class FSMSystemManager
     {
+
+        public static FSMSystemManager Instance
+        {
+            get
+            {
+                if (m_Instance == null)
+                {
+                    m_Instance = new FSMSystemManager();
+                }
+                return m_Instance;
+            }
+        }
+        private static FSMSystemManager m_Instance;
         private Dictionary<StateID, FSMState> m_StateDic = new Dictionary<StateID, FSMState>();
         private StateID m_CurrentStateID;
         private FSMState m_CurrentState;
 
+        private FSMSystemManager()
+        {
+            InitFSM();
+        }
+
+        private void InitFSM()
+        {
+            //拉取版本文件
+            DownloadVerState downloadVerState = new DownloadVerState(this);
+            downloadVerState.AddTransition(Transition.Download_Success, StateID.DownloadUpdateListFile);
+            downloadVerState.AddTransition(Transition.Download_Failed, StateID.DownloadTerminate);
+            //拉取更新配置表文件
+            DownloadUpdateListState downloadUpdateListState = new DownloadUpdateListState(this);
+            downloadUpdateListState.AddTransition(Transition.Download_Success, StateID.DownloadDiffFile);
+            downloadUpdateListState.AddTransition(Transition.Download_Failed, StateID.DownloadUpdateListFile);
+            //下载差分文件
+            DownDiffFileState downDiffFileState = new DownDiffFileState(this);
+            downDiffFileState.AddTransition(Transition.Download_Success, StateID.MergeDiffFile);
+            downDiffFileState.AddTransition(Transition.Download_Failed, StateID.DownloadTerminate);
+
+            //合并差分文件
+            MergeDiffFileState mergeDiffFileState = new MergeDiffFileState(this);
+            mergeDiffFileState.AddTransition(Transition.MergeDiffFileSuccess, StateID.DownloadTerminate);
+            mergeDiffFileState.AddTransition(Transition.MergeDiffFileFailed, StateID.MergeDiffFile);
+
+            //下载终止状态
+            DownloadTerminateState downloadTerminateState = new DownloadTerminateState(this);
+            this.AddState(downloadVerState);
+            this.AddState(downloadUpdateListState);
+            this.AddState(downloadTerminateState);
+            this.AddState(downDiffFileState);
+            this.AddState(mergeDiffFileState);
+        }
 
         /// <summary>
         /// 更新npc的动作

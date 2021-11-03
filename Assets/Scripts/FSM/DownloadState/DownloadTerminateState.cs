@@ -8,7 +8,7 @@ namespace HotfixFrameWork
 
     public class DownloadTerminateState : FSMState
     {
-        public DownloadTerminateState(FSMSystem fsmSystem) : base(fsmSystem)
+        public DownloadTerminateState(FSMSystemManager fsmSystem) : base(fsmSystem)
         {
             m_StateID = StateID.DownloadTerminate;
             m_FSMSystem.UnRegisterFSM();

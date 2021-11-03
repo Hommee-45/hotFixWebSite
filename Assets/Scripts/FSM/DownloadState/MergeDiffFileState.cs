@@ -23,7 +23,7 @@ namespace HotfixFrameWork
         private bool m_IsCanMerge = true;
         //合并器
         private MergeDiffFile m_MergeFiler;
-        public MergeDiffFileState(FSMSystem fsmSystem) : base(fsmSystem)
+        public MergeDiffFileState(FSMSystemManager fsmSystem) : base(fsmSystem)
         {
             m_StateID = StateID.MergeDiffFile;
         }

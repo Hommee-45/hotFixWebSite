@@ -5,45 +5,21 @@ using HotfixFrameWork;
 
 public class testFSM : MonoBehaviour
 {
-    private FSMSystem m_FSMSystem;
+    private FSMSystemManager m_FSMSystem;
+    private LuaEnvMgr m_LuaEnvMgr;
     // Start is called before the first frame update
+    public void Awake() {
+        Debug.Log("This is testFSM awake");
+    }
     void Start()
     {
+        Awake();
         Debug.Log("ASDSAD");
-        InitFSM();
+        m_FSMSystem = FSMSystemManager.Instance;
+        m_LuaEnvMgr = LuaEnvMgr.Instance;
     }
 
-    private void InitFSM()
-    {
-        m_FSMSystem = new FSMSystem();
-        //拉取版本文件
-        DownloadVerState downloadVerState = new DownloadVerState(m_FSMSystem);
-        downloadVerState.AddTransition(Transition.Download_Success, StateID.DownloadUpdateListFile);
-        downloadVerState.AddTransition(Transition.Download_Failed, StateID.DownloadTerminate);
-        //拉取更新配置表文件
-        DownloadUpdateListState downloadUpdateListState = new DownloadUpdateListState(m_FSMSystem);
-        downloadUpdateListState.AddTransition(Transition.Download_Success, StateID.DownloadDiffFile);
-        downloadUpdateListState.AddTransition(Transition.Download_Failed, StateID.DownloadUpdateListFile);
-        //下载差分文件
-        DownDiffFileState downDiffFileState = new DownDiffFileState(m_FSMSystem);
-        downDiffFileState.AddTransition(Transition.Download_Success, StateID.MergeDiffFile);
-        downDiffFileState.AddTransition(Transition.Download_Failed, StateID.DownloadTerminate);
 
-        //合并差分文件
-        MergeDiffFileState mergeDiffFileState = new MergeDiffFileState(m_FSMSystem);
-        mergeDiffFileState.AddTransition(Transition.MergeDiffFileSuccess, StateID.DownloadTerminate);
-        mergeDiffFileState.AddTransition(Transition.MergeDiffFileFailed, StateID.MergeDiffFile);
-
-        //下载终止状态
-        DownloadTerminateState downloadTerminateState = new DownloadTerminateState(m_FSMSystem);
-        m_FSMSystem.AddState(downloadVerState);
-        m_FSMSystem.AddState(downloadUpdateListState);
-        m_FSMSystem.AddState(downloadTerminateState);
-        m_FSMSystem.AddState(downDiffFileState);
-        m_FSMSystem.AddState(mergeDiffFileState);
-
-
-    }
 
     // Update is called once per frame
     void Update()

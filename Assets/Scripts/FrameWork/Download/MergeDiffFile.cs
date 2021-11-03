@@ -30,7 +30,7 @@ namespace HotfixFrameWork
         /// <param name="complete">完成回调</param>
         public void MergeDiffToTarget()
         {
-            foreach (DiffFileInfo fileSingle in GameConfig.g_FileInfoList)
+            foreach (DiffFileInfo fileSingle in GlobalVariable.g_FileInfoList)
             {
                 //本来资源路径
                 string localFilePath = Path.Combine(GamePathConfig.LOCAL_ANDROID_TEMP_TARGET, fileSingle.RelativePath);

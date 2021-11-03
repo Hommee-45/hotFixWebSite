@@ -85,9 +85,9 @@ namespace HotfixFrameWork
             //获取本地版本文件
             localVersion = VersionHelp.GetLocalVersionForApp();
             //赋值给全局版本
-            GameConfig.g_LocalVersion = localVersion;
+            GlobalVariable.g_LocalVersion = localVersion;
             //更改下载版本文件配置
-            GamePathConfig.VERISION_DIFF_FILENAME = localVersion.version + "-" + remoteVersion.version;
+            GlobalVariable.VERISION_DIFF_FILENAME = localVersion.version + "-" + remoteVersion.version;
             //版本是否一致, 版本不一致的时候 的处理
             if (localVersion != null && localVersion.version != remoteVersion.version)
             {
@@ -114,7 +114,7 @@ namespace HotfixFrameWork
             {
                 return;
             }
-            GameConfig.g_LocalVersion = remoteVersion;
+            GlobalVariable.g_LocalVersion = remoteVersion;
             //更新本地版本文件
             //VersionHelp.WriteLocalVersionFile(remoteVersion);
             //m_OnCompleted(VersionResType.DownloadSuccess, remoteVersion);
@@ -128,7 +128,7 @@ namespace HotfixFrameWork
         {
             Debug.Log("覆盖写入版本文件");
             //更新当前版本
-            VersionHelp.WriteLocalVersionFile(GameConfig.g_LocalVersion);
+            VersionHelp.WriteLocalVersionFile(GlobalVariable.g_LocalVersion);
         }
     }
 
@@ -455,7 +455,7 @@ namespace HotfixFrameWork
 
                     m_OnCompleted?.Invoke(DownloadResType.DownloadSuccess);
 
-                    GameConfig.g_FileInfoList = m_FileInfoList;
+                    GlobalVariable.g_FileInfoList = m_FileInfoList;
                 }
                 catch (Exception e)
                 {

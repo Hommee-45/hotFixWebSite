@@ -15,10 +15,6 @@ namespace HotfixFrameWork
         /// </summary>
         public const int DOWNLOAD_FAIL_RETRY_DELAY = 2;
 
-
-        public static List<DiffFileInfo> g_FileInfoList = new List<DiffFileInfo>();
-
-        public static Version g_LocalVersion;
     }
 }
 

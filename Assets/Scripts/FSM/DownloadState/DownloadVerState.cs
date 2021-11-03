@@ -19,7 +19,7 @@ namespace HotfixFrameWork
         private bool m_IsCanDownload = true;
         //版本文件下载
         private DownloadVersionFile m_DownloadVersionFile;
-        public DownloadVerState(FSMSystem fsmSystem) : base(fsmSystem)
+        public DownloadVerState(FSMSystemManager fsmSystem) : base(fsmSystem)
         {
             m_StateID = StateID.DownloadVersionFile;
         }

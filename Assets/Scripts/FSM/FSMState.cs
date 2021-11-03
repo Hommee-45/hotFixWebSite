@@ -21,22 +21,15 @@ namespace HotfixFrameWork
     public enum Transition
     {
         NullTransition = 0,             //空的转换条件
-
         Download_Failed,                //下载失败
         Download_Success,               //下载成功
-
         DownloadVersionSuccess,         //下载版本成功
         DownloadUpdateListSuccess,      //下载更新列表成功
         DownloadDiffFileSuccess,        //下载差分文件成功
-
-
         VeriftFileIntegSuccess,         //校验文件成功
         VeriftFileIntegFail,            //校验文件失败
-
         MergeDiffFileSuccess,           //合并差分文件成功
         MergeDiffFileFailed,            //合并差分文件失败
-
-
     }
 
     /// <summary>
@@ -48,11 +41,8 @@ namespace HotfixFrameWork
         DownloadVersionFile,        //下载版本文件
         DownloadUpdateListFile,     //下载更新列表文件
         DownloadDiffFile,           //下载差分文件
-    
-
         VerifyFileIntegrity,        //校验文件完整
         MergeDiffFile,              //合并差分文件
-
         DownloadTerminate,          //终止下载(一般指下载失败)
         DownloadFinished,           //所有下载完成
     }
@@ -61,12 +51,11 @@ namespace HotfixFrameWork
     public abstract class FSMState
     {
         public StateID StateID { get { return m_StateID; } }
-
         protected StateID m_StateID;
         protected Dictionary<Transition, StateID> m_TransitionStateDict = new Dictionary<Transition, StateID>();
-        protected FSMSystem m_FSMSystem;
+        protected FSMSystemManager m_FSMSystem;
 
-        public FSMState(FSMSystem fsmSystem)
+        public FSMState(FSMSystemManager fsmSystem)
         {
             m_FSMSystem = fsmSystem;
         }

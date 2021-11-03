@@ -42,12 +42,6 @@ public class CoroutineManager
             for (int i = 0; i < m_ActiveTaskList.Count; i++)
             {
                 CoroutineTask tempTask = m_ActiveTaskList[i];
-                //if (!tempTask.m_Routine.MoveNext())
-                //{
-                //    anyTaskFinish = true;
-                //    tempTask.m_IsFinish = true;
-                //    m_ActiveTaskList[i] = tempTask;
-                //}
                 if (!CanMoveNext(tempTask.m_Routine))
                 {
                     anyTaskFinish = true;
