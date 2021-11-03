@@ -81,6 +81,7 @@ namespace HotfixFrameWork
         {
             m_LuaEnv.AddLoader((ref string filePath) =>
             {
+                Debug.Log("LuaMgr: " + filePath);
                 return GetLuaText(filePath);
             }
             );

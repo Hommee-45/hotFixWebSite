@@ -17,6 +17,7 @@ public class testFSM : MonoBehaviour
         Debug.Log("ASDSAD");
         m_FSMSystem = FSMSystemManager.Instance;
         m_LuaEnvMgr = LuaEnvMgr.Instance;
+        m_LuaEnvMgr.CallLua(string.Format("{0}/Main", ""));
     }
 
 

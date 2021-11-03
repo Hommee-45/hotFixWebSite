@@ -49,7 +49,7 @@ namespace HotfixFrameWork
                 StringBuilder sb = new StringBuilder(path);
                 path = sb.Replace("/", "/" + GamePathConfig.ANDROID_LUA_HOTFIX_FOLDERNAME + "/", path.IndexOf('/'), 1).ToString();
             }
-            path = string.Format("{0}/{1}{2}", GamePathConfig.LOCAL_ANDROID_TEMP_TARGET, path, GetLuaExtension());
+            path = string.Format("{0}{1}{2}", GamePathConfig.LOCAL_ANDROID_TEMP_TARGET, path, GetLuaExtension());
             return path;
         }
 
