@@ -1,0 +1,32 @@
+--[[
+    luaide  模板位置位于 Template/FunTemplate/NewFileTemplate.lua 其中 Template 为配置路径 与luaide.luaTemplatesDir
+    luaide.luaTemplatesDir 配置 https://www.showdoc.cc/web/#/luaide?page_id=713062580213505
+    author:{author}
+    time:2021-11-04 16:25:58
+]]
+
+GameMgr = {}
+local _singles = {}
+local this = GameMgr
+function  this.Init()
+    _singles = {}
+end
+
+--[[
+    添加单例
+]]
+function this.AddSingle(path, name, notDestroy)
+    if _singles[name] ~= nil then
+        return
+    end
+    local go = UE.GameObject(path)
+    _singles[name] = HT.LuaEnvMgr.Instance.CreateSingle(go, path).Table
+    if notDestroy == true then
+        UE.Object.DontDestroyOnLoad(go)
+    end
+
+    if _singles[name].Init ~= nil then
+        _singles[name].Init()
+    end
+
+end

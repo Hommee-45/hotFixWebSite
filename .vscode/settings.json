@@ -1,0 +1,17 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/*.meta" : true,
+        "**/*.prefab":true,
+        "**/*.unity":true,
+        "Library/":true,
+        "library/":true,
+        "**/*.mat":true,
+    },
+    "editor.snippetSuggestions": "bottom"
+}

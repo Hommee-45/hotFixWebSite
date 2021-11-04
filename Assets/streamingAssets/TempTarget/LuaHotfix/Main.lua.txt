@@ -1,0 +1,12 @@
+
+require ("LuaHotfix/Global")
+local breakSocketHandle,debugXpCall = require("LuaHotfix/LuaDebug")("localhost",7003) 
+function Main()
+    Log.Info("Fuck Yout ASS")
+    print("Fuck Yout ASS")
+end
+
+
+function AllComplete(data)
+    print("AllComplete")
+end

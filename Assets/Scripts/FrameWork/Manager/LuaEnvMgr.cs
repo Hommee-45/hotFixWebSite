@@ -56,14 +56,15 @@ namespace HotfixFrameWork
 
         public byte[] GetLuaText(string path)
         {
-            string url = Util.GetLuaPath(path);
-            if (File.Exists(path))
+            string urlPath = Util.GetLuaPath(path);
+            Debug.Log("LuaMgr: " + urlPath);
+            if (File.Exists(urlPath))
             {
-                return File.ReadAllBytes(path);
+                return File.ReadAllBytes(urlPath);
             }
             else
             {
-                Debug.LogError("No such a path: " + path);
+                Debug.LogError("No such a path: " + urlPath);
                 return null;
             }
         }
@@ -74,6 +75,7 @@ namespace HotfixFrameWork
             sb.Append("require ('");
             sb.Append(lua);
             sb.Append("') Main()");
+            Debug.Log("LuaEnv.DoString: " + sb.ToString());
             m_LuaEnv.DoString(sb.ToString());
         }
 
@@ -81,7 +83,7 @@ namespace HotfixFrameWork
         {
             m_LuaEnv.AddLoader((ref string filePath) =>
             {
-                Debug.Log("LuaMgr: " + filePath);
+                Debug.Log("LoaderPath : " + filePath);
                 return GetLuaText(filePath);
             }
             );

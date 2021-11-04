@@ -7,17 +7,12 @@ public class testFSM : MonoBehaviour
 {
     private FSMSystemManager m_FSMSystem;
     private LuaEnvMgr m_LuaEnvMgr;
-    // Start is called before the first frame update
-    public void Awake() {
-        Debug.Log("This is testFSM awake");
-    }
+
     void Start()
     {
-        Awake();
-        Debug.Log("ASDSAD");
         m_FSMSystem = FSMSystemManager.Instance;
         m_LuaEnvMgr = LuaEnvMgr.Instance;
-        m_LuaEnvMgr.CallLua(string.Format("{0}/Main", ""));
+        m_LuaEnvMgr.CallLua(string.Format("{0}/Main", "LuaHotfix"));
     }
 
 

@@ -31,7 +31,7 @@ namespace HotfixFrameWork
                 #if UNITY_EDITOR
                     return string.Format("{0}/{1}", GamePathConfig.LOCAL_ANDROID_TEMP_TARGET, GamePathConfig.ANDROID_LUA_HOTFIX_FOLDERNAME);
                 #elif UNITY_ANDROID
-                    return string.Format("{0}/{1}", GamePathConfig.LOCAL_ANDROID_TEMP_TARGET, GamePathConfig.ANDROID_LUA_HOTFIX_FOLDER);
+                    return string.Format("{0}/{1}", GamePathConfig.LOCAL_ANDROID_TEMP_TARGET, GamePathConfig.ANDROID_LUA_HOTFIX_FOLDERNAME);
                 #endif
             }
         }
@@ -40,7 +40,7 @@ namespace HotfixFrameWork
 
         public static string GetLuaExtension()
         {
-            return ".lua";
+            return ".lua.txt";
         }
         public static string GetLuaPath(string path)
         {
@@ -49,7 +49,8 @@ namespace HotfixFrameWork
                 StringBuilder sb = new StringBuilder(path);
                 path = sb.Replace("/", "/" + GamePathConfig.ANDROID_LUA_HOTFIX_FOLDERNAME + "/", path.IndexOf('/'), 1).ToString();
             }
-            path = string.Format("{0}{1}{2}", GamePathConfig.LOCAL_ANDROID_TEMP_TARGET, path, GetLuaExtension());
+            path = string.Format("{0}/{1}{2}", GamePathConfig.LOCAL_ANDROID_TEMP_TARGET, path, GetLuaExtension());
+            
             return path;
         }
 

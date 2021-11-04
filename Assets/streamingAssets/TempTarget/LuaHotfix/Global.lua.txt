@@ -1,0 +1,4 @@
+require 'LuaHotfix/Global/G_CS'
+require 'LuaHotfix/Global/G_Log'
+require 'LuaHotfix/Global/G_Function'
+require 'LuaHotfix/Global/G_GameMgr'

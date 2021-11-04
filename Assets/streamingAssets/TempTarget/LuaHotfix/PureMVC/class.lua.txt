@@ -1,0 +1,47 @@
+--[[
+    luaide  模板位置位于 Template/FunTemplate/NewFileTemplate.lua 其中 Template 为配置路径 与luaide.luaTemplatesDir
+    luaide.luaTemplatesDir 配置 https://www.showdoc.cc/web/#/luaide?page_id=713062580213505
+    author:{author}
+    time:2021-11-04 14:27:30
+]]
+
+function class(classname, super)
+    local cls
+    
+    if type(super) ~= 'table' then
+        super = nil
+    end
+
+    if super then
+        cls = {}
+        setmetatable(cls, {__index = super})        --cls查找不到的数据再到 原表中的__index指向的表中找
+        cls.super = super       
+    else
+        cls = {ctor = function () end}
+    end
+    cls.__cname = classname
+    cls.__index = cls                   --cls.__index仅仅只是cls的一个键
+
+    function cls.new(...)
+        local instance = setmetatable({}, cls)
+        instance.class = cls
+        instance:ctor(...)
+        return instance
+    end
+    return cls
+end
+function  iskindof(obj, classname)
+    local t = type(obj)
+    local mt
+    if t == "table" then
+        mt = getmetatable(obj)
+    end
+
+    while  mt  do
+        if mt.__cname == classname then
+            return true
+        end
+        mt = mt.super
+    end
+    return false
+end
