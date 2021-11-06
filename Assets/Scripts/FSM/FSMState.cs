@@ -37,8 +37,9 @@ namespace HotfixFrameWork
     /// </summary>
     public enum StateID
     {
-        NullState,      //空的状态
+        NullState,                  //空的状态
         DownloadVersionFile,        //下载版本文件
+        DownloadDESKey,             //下载DESKey
         DownloadUpdateListFile,     //下载更新列表文件
         DownloadDiffFile,           //下载差分文件
         VerifyFileIntegrity,        //校验文件完整

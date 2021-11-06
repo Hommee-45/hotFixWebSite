@@ -37,8 +37,13 @@ namespace HotfixFrameWork
             downloadVerState.AddTransition(Transition.Download_Failed, StateID.DownloadTerminate);
             //拉取更新配置表文件
             DownloadUpdateListState downloadUpdateListState = new DownloadUpdateListState(this);
-            downloadUpdateListState.AddTransition(Transition.Download_Success, StateID.DownloadDiffFile);
+            downloadUpdateListState.AddTransition(Transition.Download_Success, StateID.DownloadDESKey);
             downloadUpdateListState.AddTransition(Transition.Download_Failed, StateID.DownloadUpdateListFile);
+            //拉取DESkey
+            DownloadDESKeyState downloadDESKeyState = new DownloadDESKeyState(this);
+            downloadDESKeyState.AddTransition(Transition.Download_Success, StateID.DownloadDiffFile);
+            downloadDESKeyState.AddTransition(Transition.Download_Failed, StateID.DownloadDESKey);
+
             //下载差分文件
             DownDiffFileState downDiffFileState = new DownDiffFileState(this);
             downDiffFileState.AddTransition(Transition.Download_Success, StateID.MergeDiffFile);
@@ -56,6 +61,7 @@ namespace HotfixFrameWork
             this.AddState(downloadTerminateState);
             this.AddState(downDiffFileState);
             this.AddState(mergeDiffFileState);
+            this.AddState(downloadDESKeyState);
         }
 
         /// <summary>

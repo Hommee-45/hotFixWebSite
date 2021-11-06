@@ -6,33 +6,31 @@ using UnityEngine;
 
 namespace HotfixFrameWork
 {
-
-    public class DownloadUpdateListState : FSMState
+    public class DownloadDESKeyState : FSMState
     {
-
         //是否成功下载版本文件
         private FSMDownloadState m_DownloadState;
         //下载是否有回应
         private bool m_IsCallback = false;
         //是否可以下载
         private bool m_IsCanDownload = true;
-        //版本文件下载
-        private DownloadUpdateListFile m_DownLoadUpdateListFile;
+        //DESKey下载器
+        private DownloadDESKey m_DownloadDESKey;
 
-        public DownloadUpdateListState(FSMSystemManager fsmSystem) : base(fsmSystem)
+        public DownloadDESKeyState(FSMSystemManager fsmSystem) : base(fsmSystem)
         {
-            m_StateID = StateID.DownloadUpdateListFile;
+            m_StateID = StateID.DownloadDESKey;
         }
 
         public override void DoBeforeEnter()
         {
-            if (m_DownLoadUpdateListFile == null)
+            if (m_DownloadDESKey == null)
             {
-                m_DownLoadUpdateListFile = new DownloadUpdateListFile(
-                    Path.Combine(DownLoadUrlConfig.ANDROID_XIAOMI_ASSETSPATH, GlobalVariable.VERISION_DIFF_FILENAME, GamePathConfig.ANDROID_UPDATELIST_NAME),
+                m_DownloadDESKey = new DownloadDESKey(
+                    Path.Combine(DownLoadUrlConfig.ANDROID_XIAOMI_ASSETSPATH, GlobalVariable.VERISION_DIFF_FILENAME, GamePathConfig.ANDROID_DESKEY_FILENAME),
                     GameConfig.DOWNLOAD_FAIL_COUNT,
                     GameConfig.DOWNLOAD_FAIL_RETRY_DELAY,
-                    DownLoadUpdateListCompleted);
+                    DownLoadDESKeyCompleted);
             }
             //初始化
             m_IsCanDownload = true;
@@ -44,15 +42,15 @@ namespace HotfixFrameWork
         {
             if (m_IsCanDownload)
             {
-                if (m_DownLoadUpdateListFile == null)
+                if (m_DownloadDESKey == null)
                 {
-                    m_DownLoadUpdateListFile = new DownloadUpdateListFile(
-                        Path.Combine(DownLoadUrlConfig.ANDROID_XIAOMI_ASSETSPATH, GlobalVariable.VERISION_DIFF_FILENAME, GamePathConfig.ANDROID_UPDATELIST_NAME), 
-                        GameConfig.DOWNLOAD_FAIL_COUNT, 
+                    m_DownloadDESKey = new DownloadDESKey(
+                        Path.Combine(DownLoadUrlConfig.ANDROID_XIAOMI_ASSETSPATH, GlobalVariable.VERISION_DIFF_FILENAME, GamePathConfig.ANDROID_DESKEY_FILENAME),
+                        GameConfig.DOWNLOAD_FAIL_COUNT,
                         GameConfig.DOWNLOAD_FAIL_RETRY_DELAY,
-                        DownLoadUpdateListCompleted);
+                        DownLoadDESKeyCompleted);
                 }
-                m_DownLoadUpdateListFile.StartDownload();
+                m_DownloadDESKey.StartDownload();
                 m_IsCanDownload = false;
             }
         }
@@ -70,33 +68,30 @@ namespace HotfixFrameWork
                     m_FSMSystem.PerformTransition(Transition.Download_Failed);
                 }
                 m_IsCallback = false;
-
             }
         }
 
+        public override void DoAfterLeave()
+        {
+            base.DoAfterLeave();
+        }
 
 
-
-
-
-
-        private void DownLoadUpdateListCompleted(DownloadResType type)
+        private void DownLoadDESKeyCompleted(DownloadResType type, string key)
         {
             m_IsCallback = true;
             switch (type)
             {
-                case DownloadResType.DownloadFail:
-                    Debug.Log("===============updateList拉取失败  ");
-                    m_DownloadState = FSMDownloadState.DownloadFail;
-                    break;
                 case DownloadResType.DownloadSuccess:
-                    Debug.Log("===============updateList拉取成功");
+                    Debug.Log("==============DESKey: 拉取成功" + key);
                     m_DownloadState = FSMDownloadState.DownSuccess;
                     break;
-
+                case DownloadResType.DownloadFail:
+                    Debug.Log("==============DESKey拉取失败失败");
+                    m_DownloadState = FSMDownloadState.DownloadFail;
+                    break;
             }
         }
     }
 
 }
-

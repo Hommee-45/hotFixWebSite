@@ -30,7 +30,7 @@ namespace HotfixFrameWork
             if (m_PathFileDownloader == null)
             {
                 m_PathFileDownloader = new DownloadDiffFile(
-                    Path.Combine(DownLoadUrlConfig.ANDROID_TAPTAP_ASSETSPATH, GlobalVariable.VERISION_DIFF_FILENAME),
+                    Path.Combine(DownLoadUrlConfig.ANDROID_XIAOMI_ASSETSPATH, GlobalVariable.VERISION_DIFF_FILENAME),
                     GameConfig.DOWNLOAD_FAIL_COUNT,
                     GameConfig.DOWNLOAD_FAIL_RETRY_DELAY,
                     DownloadDiffFileCompleted);
@@ -47,7 +47,7 @@ namespace HotfixFrameWork
                 if (m_PathFileDownloader == null)
                 {
                     m_PathFileDownloader = new DownloadDiffFile(
-                    Path.Combine(DownLoadUrlConfig.ANDROID_TAPTAP_ASSETSPATH, GlobalVariable.VERISION_DIFF_FILENAME),
+                    Path.Combine(DownLoadUrlConfig.ANDROID_XIAOMI_ASSETSPATH, GlobalVariable.VERISION_DIFF_FILENAME),
                     GameConfig.DOWNLOAD_FAIL_COUNT,
                     GameConfig.DOWNLOAD_FAIL_RETRY_DELAY,
                     DownloadDiffFileCompleted);

@@ -74,6 +74,14 @@ namespace HotfixFrameWork
             m_ScriptEnv.Set("self", this);
 
             Byte[] lua = LuaEnvMgr.Instance.GetLuaText(LuaPath);
+            if (lua == null)
+            {
+                Debug.LogError("byte lua 为空");
+            }
+            if (m_ScriptEnv == null)
+            {
+                Debug.LogError("m_ScriptEnv为空");
+            }
             m_LuaEnv.DoString(lua, "LuaScript", m_ScriptEnv);
             m_ScriptEnv.Get("Awake", out m_LuaAwake);
             m_ScriptEnv.Get("Start", out m_LuaStart);

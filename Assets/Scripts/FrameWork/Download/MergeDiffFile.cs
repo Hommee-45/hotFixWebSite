@@ -30,24 +30,28 @@ namespace HotfixFrameWork
         /// <param name="complete">完成回调</param>
         public void MergeDiffToTarget()
         {
-            foreach (DiffFileInfo fileSingle in GlobalVariable.g_FileInfoList)
+            foreach (FileDiffTool.Tools.DiffConfig fileSingle in GlobalVariable.g_FileInfoList)
             {
                 //本来资源路径
-                string localFilePath = Path.Combine(GamePathConfig.LOCAL_ANDROID_TEMP_TARGET, fileSingle.RelativePath);
+                string localFilePath = Path.Combine(GamePathConfig.LOCAL_ANDROID_TEMP_TARGET, fileSingle.Get_RelativePath());
                 //目标资源路径
-                string targetFilePath = DirectoryHelp.CreateDirectoryRecursiveInclude(fileSingle.RelativePath, GamePathConfig.LOCAL_ANDROID_TEMP_TARGET_1);
+                // string targetFilePath = DirectoryHelp.CreateDirectoryRecursiveInclude(fileSingle.Get_RelativePath(), GamePathConfig.LOCAL_ANDROID_TEMP_TARGET_1);
+                string targetFilePath = DirectoryHelp.CreateDirectoryRecursiveInclude(fileSingle.Get_RelativePath(), Application.temporaryCachePath);
                 //差分文件路径
-                string diffFilePath = Path.Combine(DirectoryHelp.CreateDirectoryRecursive(fileSingle.RelativePath, Application.temporaryCachePath), fileSingle.FileName);
-                //Debug.Log("diffFile url: " + diffFilePath);
-                //Debug.Log("localFilePath: " + localFilePath);
-                //Debug.Log("targetFilePath: " + targetFilePath);
+                string diffFilePath = Path.Combine(DirectoryHelp.CreateDirectoryRecursive(fileSingle.Get_RelativePath(), Application.temporaryCachePath), fileSingle.Get_MD5());
+                // Debug.Log("diffFile url: " + diffFilePath);
+                // Debug.Log("localFilePath: " + localFilePath);
+                // Debug.Log("targetFilePath: " + targetFilePath);
 
-                if (!VCDiffHelp.DoDecode(localFilePath, diffFilePath, targetFilePath))
+                int res = FileDiffTool.Tools.FileProcessing.SingleRP(fileSingle, GlobalVariable.g_DESKey, localFilePath, diffFilePath, targetFilePath, GamePathConfig.LOCAL_ANDROID_TEMP_TARGET_1);
+                Debug.Log("合并结果： " + res);
+                if (res < 0)
                 {
                     Debug.LogError("合并出错");
                     m_OnCompleted(MergeDiffResType.MergeFail);
                     goto Exit0;
                 }
+
                 DirectoryHelp.CopyFile(targetFilePath, localFilePath);
 
             }
@@ -55,6 +59,7 @@ namespace HotfixFrameWork
         m_OnCompleted(MergeDiffResType.MergeSucc);
         Exit0:
             DirectoryHelp.CleanDirectory(Application.temporaryCachePath);
+            //DirectoryHelp.CleanDirectory(GamePathConfig.LOCAL_ANDROID_TEMP_TARGET_1);
         }
     }
 }

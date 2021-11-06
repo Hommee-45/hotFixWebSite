@@ -20,6 +20,8 @@ namespace HotfixFrameWork
         public const string ANDROID_TAPTAP = "http://119.29.165.241:8088/Android/TapTap/";
         //云服务器Android平台 TapTap去到热更资源文件夹
         public const string ANDROID_TAPTAP_ASSETSPATH = "http://119.29.165.241:8088/Android/TapTap/AssetBundles/";
+        //云服务器Android平台 XIAOMI去到热更资源文件夹
+        public const string ANDROID_XIAOMI_ASSETSPATH = "http://119.29.165.241:8088/Android/XiaoMI/AssetBundles/";
         //云服务器IOS平台
         public const string IOS = "http://119.29.165.241:8088/IOS/";
 
@@ -36,6 +38,8 @@ namespace HotfixFrameWork
         public static string LOCAL_ANDROID_TEMP_TARGET_1 = Application.streamingAssetsPath + "/TempTarget1";
         //客户端 Android 保存更新配置文件列表
         public static string LOCAL_ANDROID_UPDATELIST_PATH = Application.streamingAssetsPath + "/Android/updateList.txt";
+        //客户端 Android 保存DESKey.txt
+        public static string LOCAL_ANDROID_DESKEY_PATH = Application.streamingAssetsPath + "/Android/DESKey.txt";
         //客户端 Android 文件夹(暂时没用到)
         public static string LOCAL_ANDROID_PATH = Path.Combine(Application.streamingAssetsPath, "Android");
 
@@ -51,9 +55,11 @@ namespace HotfixFrameWork
         public static string LOCAL_ASSETBUNDLES_PATH = Application.streamingAssetsPath + "/Android/AssetBundles/";
 #endif
         //云服务器 配置文件名称
-        public const string ANDROID_UPDATELIST_NAME = "updateList2019.txt";
+        public const string ANDROID_UPDATELIST_NAME = "Congfigs.txt";
         //云服务器 版本文件名称
         public const string ANDROID_VERSION_FILENAME = "version.txt";
+        //云服务器 DESKey文件名称
+        public const string ANDROID_DESKEY_FILENAME = "DESKey.txt";
 
         public const string ANDROID_LUA_HOTFIX_FOLDERNAME = "LuaHotfix";
     }

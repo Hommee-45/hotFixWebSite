@@ -12,7 +12,7 @@ namespace HotfixFrameWork
 
 
         //是否成功下载版本文件
-        private FSMDownloadState downloadState;
+        private FSMDownloadState m_DownloadState;
         //下载是否有回应
         private bool m_IsCallback = false;
         //是否可以下载
@@ -30,7 +30,7 @@ namespace HotfixFrameWork
             if (m_DownloadVersionFile == null)
             {
                 m_DownloadVersionFile = new DownloadVersionFile(
-                    Path.Combine(DownLoadUrlConfig.ANDROID_TAPTAP, GamePathConfig.ANDROID_VERSION_FILENAME), 
+                    Path.Combine(DownLoadUrlConfig.ANDROID_XIAOMI, GamePathConfig.ANDROID_VERSION_FILENAME), 
                     GameConfig.DOWNLOAD_FAIL_COUNT, 
                     GameConfig.DOWNLOAD_FAIL_RETRY_DELAY, 
                     DownLoadVersionCompleted);
@@ -38,7 +38,7 @@ namespace HotfixFrameWork
             //初始化
             m_IsCanDownload = true;
             m_IsCallback = false;
-            downloadState = FSMDownloadState.Downloading;
+            m_DownloadState = FSMDownloadState.Downloading;
         }
 
         public override void DoAfterLeave()
@@ -52,7 +52,7 @@ namespace HotfixFrameWork
                 if (m_DownloadVersionFile == null)
                 {
                     m_DownloadVersionFile = new DownloadVersionFile(
-                        Path.Combine(DownLoadUrlConfig.ANDROID_TAPTAP, GamePathConfig.ANDROID_VERSION_FILENAME), 
+                        Path.Combine(DownLoadUrlConfig.ANDROID_XIAOMI, GamePathConfig.ANDROID_VERSION_FILENAME), 
                         GameConfig.DOWNLOAD_FAIL_COUNT, 
                         GameConfig.DOWNLOAD_FAIL_RETRY_DELAY, 
                         DownLoadVersionCompleted);
@@ -66,11 +66,11 @@ namespace HotfixFrameWork
         {
             if (m_IsCallback)
             {
-                if (downloadState == FSMDownloadState.DownSuccess)
+                if (m_DownloadState == FSMDownloadState.DownSuccess)
                 {
                     m_FSMSystem.PerformTransition(Transition.Download_Success);
                 }
-                else if (downloadState == FSMDownloadState.DownloadFail)
+                else if (m_DownloadState == FSMDownloadState.DownloadFail)
                 {
                     m_FSMSystem.PerformTransition(Transition.Download_Failed);
                 }
@@ -87,11 +87,11 @@ namespace HotfixFrameWork
             {
                 case DownloadResType.DownloadFail:
                     Debug.Log("===============Version 下载失败 当前版本为： " + localVersion.version);
-                    downloadState = FSMDownloadState.DownloadFail;
+                    m_DownloadState = FSMDownloadState.DownloadFail;
                     break;
                 case DownloadResType.DownloadSuccess:
                     Debug.Log("===============Version 版本拉取成功 当前版本为： " + localVersion.version + " 最新版本为： " + remoteVersion.version);
-                    downloadState = FSMDownloadState.DownSuccess;
+                    m_DownloadState = FSMDownloadState.DownSuccess;
                     break;
                 case DownloadResType.Different:
                     Debug.Log("===============Version 版本不同 最新版本为： " + localVersion.version);
@@ -102,11 +102,11 @@ namespace HotfixFrameWork
                         Debug.Log("===============Version 解析异常 当前版本为： " + localVersion.version);
                     }
                     else
-                        Debug.Log("===============Version 解析异常");
+                        Debug.Log("===============Version 解析异常 请重启");
                     break;
                 case DownloadResType.LatestVersion:
                     Debug.Log("===============Version 无需下载 当前版本为： " + localVersion.version + " 最新版本为： " + remoteVersion.version);
-                    downloadState = FSMDownloadState.DownloadFail;
+                    m_DownloadState = FSMDownloadState.DownloadFail;
                     break;
             }
         }

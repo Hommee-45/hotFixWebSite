@@ -47,7 +47,7 @@ namespace HotfixFrameWork
         /// <returns>返回除文件名之外的路径</returns>
         public static string CreateDirectoryRecursive(string relativePath, string rootDir)
         {
-            var list = relativePath.Split('/');
+            var list = relativePath.Split('/', '\\');
             //var temp = Application.temporaryCachePath;
             //Debug.Log("tempDir: " + rootDir);
             //var temp = DownLoadUrlConfig.LOCAL_ANDROID_PATH;
@@ -77,7 +77,7 @@ namespace HotfixFrameWork
         /// <returns>返回文件路径(包括文件名)</returns>
         public static string CreateDirectoryRecursiveInclude(string relativePath, string rootDir)
         {
-            var list = relativePath.Split('/');
+            var list = relativePath.Split('/', '\\');
             //Length - 1 是为了不让没有子文件夹的相对路径进入循环
             for (int i = 0; i < list.Length - 1; i++)
             {
@@ -90,6 +90,7 @@ namespace HotfixFrameWork
                 if (!Directory.Exists(rootDir))
                 {
                     Directory.CreateDirectory(rootDir);
+                    Debug.Log("创建目录： " + rootDir);
                 }
             }
 
@@ -222,6 +223,18 @@ namespace HotfixFrameWork
                 return;
             }
             File.Copy(sourDir, destDir, true);
+        }
+
+
+
+        /// <summary>
+        /// 获取文件里面的所有string
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static string GetFileAllString(string filePath)
+        {
+            return System.IO.File.ReadAllText(filePath);
         }
     }
 

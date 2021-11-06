@@ -182,13 +182,62 @@ namespace HotfixFrameWork
 
     #endregion
 
+#region 下载DES密码文件
+    public class DownloadDESKey
+    {
+        private string m_Url;
 
+        private int m_FailRetryCount;
+
+        private float m_FailRetryDelay;
+
+        private Action<DownloadResType, string> m_OnCompleted;
+
+        public DownloadDESKey(string url, int failRetryCount, float failRetryDelay, Action<DownloadResType, string> callback)
+        {
+            m_Url = url;
+            m_FailRetryCount = failRetryCount;
+            m_FailRetryDelay = failRetryDelay;
+            m_OnCompleted = callback != null ? callback : (DownloadResType t, string s) => { };
+        }
+
+        public void StartDownload(float delay = 0)
+        {
+            WWWMgr.Instance.Download(m_Url, DownloadCompleted, delay);
+        }
+
+        private void DownloadCompleted(WWW www)
+        {
+            if (www == null)
+            {
+                if (m_FailRetryCount <= 0)
+                {
+                    Debug.Log("DownloadVersionFile Retrying!!!  Remain Time: " + m_FailRetryCount);
+                    m_OnCompleted(DownloadResType.DownloadFail, GlobalVariable.g_DESKey);
+                    return;
+                }
+                m_FailRetryCount--;
+                StartDownload(m_FailRetryDelay);
+                return;
+            }
+            CheckDESKey(www, GamePathConfig.LOCAL_ANDROID_DESKEY_PATH);
+        }
+
+        private void CheckDESKey(WWW www, string path)
+        {
+            DirectoryHelp.CreateFile(www.bytes, path);
+            GlobalVariable.g_DESKey = DirectoryHelp.GetFileAllString(path);
+            if (GlobalVariable.g_DESKey != null)
+            {
+                m_OnCompleted(DownloadResType.DownloadSuccess, GlobalVariable.g_DESKey);
+            }
+        }
+
+    }
+#endregion
 
 
     #region 差分文件下载器
-
-
-
     public class DiffFileInfo
     {
 
@@ -205,11 +254,10 @@ namespace HotfixFrameWork
         //文件大小
         public float FileSize { get; private set; }
         //str 的 格式是 url.txt|dir/a.txt
-        public DiffFileInfo(string str, int failRetryCount)
+        public DiffFileInfo(string str)
         {
             Parse(str);
         }
-
         protected virtual void Parse(string str)
         {
             var val = str.Split('|');
@@ -231,7 +279,6 @@ namespace HotfixFrameWork
 
 
     }
-
     public class DownloadDiffFile
     {
         #region public变量
@@ -261,7 +308,7 @@ namespace HotfixFrameWork
         //当前已下载的bundle个数
         private int m_BundleCount = 0;
         //文件信息列表
-        private List<DiffFileInfo> m_FileInfoList;
+        private List<FileDiffTool.Tools.DiffConfig> m_FileInfoList;
         //下载更新列表文件url
         private string m_DownloadURL = "";
         //更新列表txt
@@ -319,7 +366,7 @@ namespace HotfixFrameWork
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        protected virtual bool CheckNeddDownLoad(DiffFileInfo info)
+        protected virtual bool CheckNeddDownLoad(FileDiffTool.Tools.DiffConfig info)
         {
             return true;
         }
@@ -338,10 +385,11 @@ namespace HotfixFrameWork
             
             UpdateInfoToList(ref originFileList);
 
-            m_FileInfoList = new List<DiffFileInfo>();
+            m_FileInfoList = new List<FileDiffTool.Tools.DiffConfig>();
             for (int i = 0; i < originFileList.Count; i++)
             {
-                var info = new DiffFileInfo(originFileList[i], m_FailRetryCount);
+                FileDiffTool.Tools.DiffConfig info = new FileDiffTool.Tools.DiffConfig();
+                info.Parse(originFileList[i]);
                 if (!CheckNeddDownLoad(info))
                 {
                     continue;
@@ -356,7 +404,7 @@ namespace HotfixFrameWork
             for (int i = 0; i < m_FileInfoList.Count; i++)
             {
                 var info = m_FileInfoList[i];
-                var fileUrl = Path.Combine(url, info.FileName);
+                var fileUrl = Path.Combine(url, info.Get_MD5());
                 CoroutineManager.Instance.StartCoroutine(CoDownloadAndWriteFile(fileUrl, info));
             }
 
@@ -373,7 +421,7 @@ namespace HotfixFrameWork
         /// <param name="url"></param>
         /// <param name="fileInfo"></param>
         /// <returns></returns>
-        private IEnumerator CoDownloadAndWriteFile(string url, DiffFileInfo fileInfo)
+        private IEnumerator CoDownloadAndWriteFile(string url, FileDiffTool.Tools.DiffConfig fileInfo)
         {
             if (m_IsDownloadFailed) yield break;
             yield return new WaitForSeconds(m_FailRetryDelay);
@@ -381,7 +429,7 @@ namespace HotfixFrameWork
             {
                 while (!www.isDone)
                 {
-                    m_DownloadFilename = fileInfo.FileName;
+                    //m_DownloadFilename = fileInfo.FileName;
                     m_Progress = (((int)(www.progress * 100)) % 100) + "%";
                     yield return null;
                 }
@@ -389,12 +437,13 @@ namespace HotfixFrameWork
                 if (www.error != null)
                 {
                     DownloadSingleRerty(url, fileInfo);
-                    //WWWMgr.Instance.DownRetryFiffFile(url, DownloadCompleted, 0);
                     Debug.LogError(string.Format("read {0} failed: {1}", url, www.error));
                     yield break;
                 }
 
-                var writePath = DirectoryHelp.CreateDirectoryRecursive(fileInfo.RelativePath, Application.temporaryCachePath) + "/" + fileInfo.FileName;
+                //var writePath = DirectoryHelp.CreateDirectoryRecursive(fileInfo.RelativePath, Application.temporaryCachePath) + "/" + fileInfo.FileName;
+                var writePath = DirectoryHelp.CreateDirectoryRecursive(fileInfo.Get_RelativePath(), Application.temporaryCachePath) + "/" + fileInfo.Get_MD5();
+                Debug.Log("writePath: " + writePath);
                 DirectoryHelp.CreateFile(www.bytes, writePath);
                 www.Dispose();
                 m_BundleCount++;
@@ -419,7 +468,7 @@ namespace HotfixFrameWork
         /// </summary>
         /// <param name="url"></param>
         /// <param name="fileInfo"></param>
-        private void DownloadSingleRerty(string url, DiffFileInfo fileInfo)
+        private void DownloadSingleRerty(string url, FileDiffTool.Tools.DiffConfig fileInfo)
         {
             if (m_FailRetryCount <= 0)
             {//重试单个文件下载三次失败
