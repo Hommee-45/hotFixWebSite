@@ -23,6 +23,7 @@ namespace HotfixFrameWork
         private bool m_IsCanMerge = true;
         //合并器
         private MergeDiffFile m_MergeFiler;
+
         public MergeDiffFileState(FSMSystemManager fsmSystem) : base(fsmSystem)
         {
             m_StateID = StateID.MergeDiffFile;
@@ -68,19 +69,19 @@ namespace HotfixFrameWork
 
 
 
-        private void MergeFileCompletedd(MergeDiffResType type)
+        private void MergeFileCompletedd(MergeDiffResType type, int res)
         {
             m_IsCallback = true;
             switch (type)
             {
                 case MergeDiffResType.MergeSucc:
-                    Debug.Log("===============差分文件合并成功");
+                    Debug.Log("===============差分文件合并成功 回复码为： " + res);
                     m_MergeState = MergeState.MergeSucc;
                     //合并流程结束了， 更新本地版本号
                     DownloadVersionFile.UpdateWriteLocalVersionFile();
                     break;
                 case MergeDiffResType.MergeFail:
-                    Debug.Log("===============差分文件合并失败");
+                    Debug.Log("===============差分文件合并失败 出错码为： " + res);
                     m_MergeState = MergeState.MergeFail;
                     break;
                

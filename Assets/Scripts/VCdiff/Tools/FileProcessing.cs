@@ -260,6 +260,8 @@ namespace FileDiffTool.Tools
         private string UZPFILE_CRC;
         private string ORGFIlE_CRC;
         private string FILETYPE;
+        private string m_LocalPath;
+        private string m_TargetPath;
 
         public void Parse(string data)
         {
@@ -279,6 +281,14 @@ namespace FileDiffTool.Tools
             FILETYPE = val[6];
         }
 
+        public string GetLocalPath()
+        {
+            return m_LocalPath;
+        }
+        public string GetTargetPath()
+        {
+            return m_TargetPath;
+        }
         public string GetFileName()
         {
             string[] vector = Get_RelativePath().Split('\\');
@@ -297,6 +307,14 @@ namespace FileDiffTool.Tools
         public string Get_RelativePath()
         {
             return RELATIVE_NAME;
+        }
+        public void SetLocalPath(string localPath)
+        {
+            m_LocalPath = localPath;
+        }
+        public void SetTargetPath(string targetPath)
+        {
+            m_TargetPath = targetPath;
         }
         public void   Set_RelativePath(string path)
         {

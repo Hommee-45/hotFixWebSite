@@ -8,11 +8,15 @@ public class testFSM : MonoBehaviour
     private FSMSystemManager m_FSMSystem;
     private LuaEnvMgr m_LuaEnvMgr;
 
+    private void Awake() 
+    {    
+        m_LuaEnvMgr = LuaEnvMgr.Instance;
+        m_LuaEnvMgr.CallLua(string.Format("{0}/Main", "LuaHotfix"));    
+    }
     void Start()
     {
         m_FSMSystem = FSMSystemManager.Instance;
-        //m_LuaEnvMgr = LuaEnvMgr.Instance;
-        //m_LuaEnvMgr.CallLua(string.Format("{0}/Main", "LuaHotfix"));
+
     }
 
 

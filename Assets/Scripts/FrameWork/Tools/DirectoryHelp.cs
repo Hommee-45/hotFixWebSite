@@ -214,15 +214,16 @@ namespace HotfixFrameWork
         /// </summary>
         /// <param name="sourDir">源文件路径</param>
         /// <param name="destDir">目标文件路径</param>
-        public static void CopyFile(string sourDir, string destDir)
+        public static int CopyFile(string sourDir, string destDir)
         {
             string rootDir = sourDir.Substring(0, sourDir.LastIndexOf('/'));
             if (!Directory.Exists(rootDir))
             {
                 Debug.LogError("no such a path: " + sourDir);
-                return;
+                return -1;
             }
             File.Copy(sourDir, destDir, true);
+            return 1;
         }
 
 

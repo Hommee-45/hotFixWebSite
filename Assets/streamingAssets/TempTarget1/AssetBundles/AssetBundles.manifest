@@ -1,7 +1,0 @@
-ManifestFileVersion: 0
-CRC: 2388047292
-AssetBundleManifest:
-  AssetBundleInfos:
-    Info_0:
-      Name: luatestcube.unity3d
-      Dependencies: {}
