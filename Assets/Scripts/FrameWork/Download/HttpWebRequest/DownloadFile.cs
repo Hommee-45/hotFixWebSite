@@ -323,6 +323,8 @@ namespace HotfixFrameWork
 
 
         #region 协程 CorotineTask
+
+        private HttpDownLoad m_HttpDownload;
         private CoroutineTask m_CoDownload;
         private CoroutineTask m_CoDownloadAndWriteFile;
 
@@ -349,6 +351,7 @@ namespace HotfixFrameWork
             m_FailRetryDelay = failRetryDelay;
             m_IsDownloadFailed = false;
             m_IsDownloadFinish = false;
+            m_HttpDownload = new HttpDownLoad();
         }
 
         /// <summary>
@@ -405,7 +408,8 @@ namespace HotfixFrameWork
             {
                 var info = m_FileInfoList[i];
                 var fileUrl = Path.Combine(url, info.Get_MD5());
-                CoroutineManager.Instance.StartCoroutine(CoDownloadAndWriteFile(fileUrl, info));
+                //CoroutineManager.Instance.StartCoroutine(CoDownloadAndWriteFile(fileUrl, info));
+                CoroutineManager.Instance.StartCoroutine(HttpDownloadAndWriteFile(fileUrl, info));
             }
 
             //检查是否下载完成
@@ -416,7 +420,7 @@ namespace HotfixFrameWork
 
 
         /// <summary>
-        /// 下载差分文件
+        /// 下载差分文件(无断点续传)
         /// </summary>
         /// <param name="url"></param>
         /// <param name="fileInfo"></param>
@@ -442,7 +446,7 @@ namespace HotfixFrameWork
                 }
 
                 //var writePath = DirectoryHelp.CreateDirectoryRecursive(fileInfo.RelativePath, Application.temporaryCachePath) + "/" + fileInfo.FileName;
-                var writePath = DirectoryHelp.CreateDirectoryRecursive(fileInfo.Get_RelativePath(), Application.temporaryCachePath) + "/" + fileInfo.Get_MD5();
+                var writePath = DirectoryHelp.CreateDirectoryRecursive(fileInfo.Get_RelativePath(), GamePathConfig.LOCAL_ANDROID_TEMP_TARGET_1) + "/" + fileInfo.Get_MD5();
                 Debug.Log("writePath: " + writePath);
                 DirectoryHelp.CreateFile(www.bytes, writePath);
                 www.Dispose();
@@ -484,7 +488,19 @@ namespace HotfixFrameWork
             return;
         }
 
-
+        /// <summary>
+        /// Http断点续传
+        /// </summary>
+        /// <param name="url">下载网址</param>
+        /// <param name="fileInfo">文件信息</param>
+        private IEnumerator HttpDownloadAndWriteFile(string url, FileDiffTool.Tools.DiffConfig fileInfo)
+        {
+            if (m_IsDownloadFailed)  yield break;
+            yield return new WaitForSeconds(m_FailRetryDelay);
+            var writePath = DirectoryHelp.CreateDirectoryRecursive(fileInfo.Get_RelativePath(), GamePathConfig.LOCAL_ANDROID_TEMP_TARGET_1) + "/" + fileInfo.Get_MD5();
+            Debug.Log("writePath: " + writePath);
+            new HttpDownLoad().DownLoad(url, writePath, () =>{m_BundleCount++;});
+        }
 
         /// <summary>
         /// 检查是否已经下载完成

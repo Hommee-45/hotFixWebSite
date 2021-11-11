@@ -23,16 +23,8 @@ public class HttpDownLoad {
 	public void DownLoad(string url, string savePath, Action callBack)
 	{
 		isStop = false;
-		thread = new Thread(delegate() {
-			//判断保存路径是否存在
-			if(!Directory.Exists(savePath))
-			{
-				Directory.CreateDirectory(savePath);
-			}
-			//本地文件名
-			string filePath = savePath + "/CAJviewer.txt";
-			
-			FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write);
+		thread = new Thread(delegate() {			
+			FileStream fs = new FileStream(savePath, FileMode.OpenOrCreate, FileAccess.Write);
 			long fileLength = fs.Length;
 			UnityEngine.Debug.Log(111);
 			long totalLength = GetLength(url);

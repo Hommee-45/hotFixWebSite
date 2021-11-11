@@ -37,9 +37,9 @@ namespace HotfixFrameWork
                 string localFilePath = Path.Combine(GamePathConfig.LOCAL_ANDROID_TEMP_TARGET, fileSingle.Get_RelativePath());
                 //目标资源路径
                 // string targetFilePath = DirectoryHelp.CreateDirectoryRecursiveInclude(fileSingle.Get_RelativePath(), GamePathConfig.LOCAL_ANDROID_TEMP_TARGET_1);
-                string targetFilePath = DirectoryHelp.CreateDirectoryRecursiveInclude(fileSingle.Get_RelativePath(), Application.temporaryCachePath);
+                string targetFilePath = DirectoryHelp.CreateDirectoryRecursiveInclude(fileSingle.Get_RelativePath(), GamePathConfig.LOCAL_ANDROID_TEMP_TARGET_1);
                 //差分文件路径
-                string diffFilePath = Path.Combine(DirectoryHelp.CreateDirectoryRecursive(fileSingle.Get_RelativePath(), Application.temporaryCachePath), fileSingle.Get_MD5());
+                string diffFilePath = Path.Combine(DirectoryHelp.CreateDirectoryRecursive(fileSingle.Get_RelativePath(), GamePathConfig.LOCAL_ANDROID_TEMP_TARGET_1), fileSingle.Get_MD5());
                 // Debug.Log("diffFile url: " + diffFilePath);
                 // Debug.Log("localFilePath: " + localFilePath);
                 // Debug.Log("targetFilePath: " + targetFilePath);
@@ -47,7 +47,7 @@ namespace HotfixFrameWork
                 fileSingle.SetTargetPath(targetFilePath);
 
 
-                int res = FileDiffTool.Tools.FileProcessing.SingleRP(fileSingle, GlobalVariable.g_DESKey, localFilePath, diffFilePath, targetFilePath, Application.temporaryCachePath);
+                int res = FileDiffTool.Tools.FileProcessing.SingleRP(fileSingle, GlobalVariable.g_DESKey, localFilePath, diffFilePath, targetFilePath, GamePathConfig.LOCAL_ANDROID_TEMP_TARGET_1);
                 Debug.Log("合并结果： " + res);
                 if (res < 0)
                 {
@@ -71,8 +71,8 @@ namespace HotfixFrameWork
                 }
             }
         Exit0:
-            DirectoryHelp.CleanDirectory(Application.temporaryCachePath);
-            // DirectoryHelp.CleanDirectory(GamePathConfig.LOCAL_ANDROID_TEMP_TARGET_1);
+            //DirectoryHelp.CleanDirectory(Application.temporaryCachePath);
+            DirectoryHelp.CleanDirectory(GamePathConfig.LOCAL_ANDROID_TEMP_TARGET_1);
         }
     }
 }

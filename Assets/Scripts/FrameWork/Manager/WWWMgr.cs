@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class WWWMgr : MonoBehaviour
 {
+    
+
     private static WWWMgr m_Instance;
 
 
