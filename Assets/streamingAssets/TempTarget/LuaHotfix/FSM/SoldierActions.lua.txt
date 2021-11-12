@@ -1,0 +1,48 @@
+--[[
+    luaide  模板位置位于 Template/FunTemplate/NewFileTemplate.lua 其中 Template 为配置路径 与luaide.luaTemplatesDir
+    luaide.luaTemplatesDir 配置 https://www.showdoc.cc/web/#/luaide?page_id=713062580213505
+    author:{author}
+    time:2021-11-12 15:01:46
+]]
+
+
+timer = 0
+
+function SoldierActions_IdleCleanUp(userData)
+    print("SoldierActions_IdleCleanUp data is" ..userData)
+    timer = 0
+end
+
+function SoldierActions_IdleInitialize(userData)
+    print("SoldierActions_IdleInitialize data is" ..userData)    
+    timer = 0
+end
+
+function SoldierActions_IdleUpdate(userData)
+    print("SoldierActions_IdleInitialize data is" ..userData)
+    timer = timer + 1
+    if timer > 3 then
+        return Action.Status.TERMINATED
+    end
+    return Action.Status.RUNNING
+end
+
+function SoldierActions_DieCleanUp(userData)
+    print("SoldierActions_DieCleanUp data is" ..userData)
+    timer = 0
+end
+
+function SoldierActions_DieUpdate(deltaTimeInMillis, userData)
+    print("SoldierActions_DieUpdate data is" ..userData)
+    timer = timer + 1
+    if timer > 3 then
+        return Action.Status.TERMINATED
+    end
+    return Action.Status.RUNNING
+end
+
+function SoldierActions_DieInitialize(userData)
+    print("SoldierActions_DieInitialize data is" ..userData)
+    timer = 0
+end
+

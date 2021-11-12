@@ -61,3 +61,8 @@ end
 function OnDestroy()
     _events = {}
 end
+
+function Update()
+    print("event Update")
+end
+

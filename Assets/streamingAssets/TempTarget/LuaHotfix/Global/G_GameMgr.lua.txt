@@ -11,12 +11,14 @@ end
 --[[
     添加单例
 ]]
-function this.AddSingle(path, name,notDestroy)
+function this.AddSingle(path, name, notDestroy)
     if _singles[name] ~= nil then
         return
     end
     local go=UE.GameObject(path)
-    _singles[name] = HT.LuaEnvMgr.Instance:CreateSingle(go, path).Table
+    _singles[name] = HT.LuaEnvMgr.Instance:CreateSingle(go, path).Table;
+    local biao = getmetatable(_singles[name])
+    
     if notDestroy==true then 
         UE.Object.DontDestroyOnLoad(go)
     end

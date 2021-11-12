@@ -57,7 +57,7 @@ namespace HotfixFrameWork
         public byte[] GetLuaText(string path)
         {
             string urlPath = Util.GetLuaPath(path);
-            Debug.Log("LuaMgr: " + urlPath);
+            //Debug.Log("LuaMgr: " + urlPath);
             if (File.Exists(urlPath))
             {
                 return File.ReadAllBytes(urlPath);

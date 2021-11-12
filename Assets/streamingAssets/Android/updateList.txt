@@ -1,4 +1,4 @@
-AssetBundleDiff.diff|AssetBundles/AssetBundles
-ABMDiff.diff|AssetBundles/AssetBundles.manifest
-luatestcubeDiff.diff|AssetBundles/luatestcube.unity3d
-LTCMDiff.diff|AssetBundles/luatestcube.unity3d.manifest
+ae6141c9c5c97961|AssetBundles\AssetBundles|26897|127.00|16349|65505|0
+363d2642b8b08099|AssetBundles\AssetBundles.manifest|22603|85.00|58917|44995|0
+89ef4ef7481f2d57|AssetBundles\luatestcube.unity3d|54130|15631.00|16538|28045|0
+af2b1ba45590c4eb|AssetBundles\luatestcube.unity3d.manifest|20588|127.00|43516|19405|0

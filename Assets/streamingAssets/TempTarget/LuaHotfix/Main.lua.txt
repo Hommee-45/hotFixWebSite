@@ -2,12 +2,16 @@
 require ("LuaHotfix/Global")
 local breakSocketHandle,debugXpCall = require("LuaHotfix/LuaDebug")("localhost",7003) 
 function Main()
-    --GameMgr.AddSingle("Single/Event", "Event", true)
     Log.Info("Fuck Yout ASS")
     print("Fuck Yout ASS")
+    GameMgr.AddSingle("LuaHotfix/Single/Event", "Event", true)
+    SoldierLogic_FiniteStateMachine("hellow")
+
 end
 
 
 function AllComplete(data)
     print("AllComplete")
 end 
+
+

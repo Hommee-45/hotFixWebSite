@@ -64,6 +64,7 @@ namespace HotfixFrameWork
 
         public override void DoAfterLeave()
         {
+
         }
 
 

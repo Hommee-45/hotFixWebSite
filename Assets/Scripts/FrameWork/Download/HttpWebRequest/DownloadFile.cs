@@ -322,11 +322,13 @@ namespace HotfixFrameWork
 
 
 
-        #region 协程 CorotineTask
+        #region 协程 CorotineTask 和下载器
 
+        //http下载器
         private HttpDownLoad m_HttpDownload;
         private CoroutineTask m_CoDownload;
-        private CoroutineTask m_CoDownloadAndWriteFile;
+        private CoroutineTask m_CheckLoadFinish;
+        private List<CoroutineTask> m_CoDownloadAndWriteFiles;
 
 
 
@@ -352,6 +354,7 @@ namespace HotfixFrameWork
             m_IsDownloadFailed = false;
             m_IsDownloadFinish = false;
             m_HttpDownload = new HttpDownLoad();
+            m_CoDownloadAndWriteFiles = new List<CoroutineTask>();
         }
 
         /// <summary>
@@ -408,12 +411,12 @@ namespace HotfixFrameWork
             {
                 var info = m_FileInfoList[i];
                 var fileUrl = Path.Combine(url, info.Get_MD5());
-                //CoroutineManager.Instance.StartCoroutine(CoDownloadAndWriteFile(fileUrl, info));
-                CoroutineManager.Instance.StartCoroutine(HttpDownloadAndWriteFile(fileUrl, info));
+                CoroutineTask task = CoroutineManager.Instance.StartCoroutine(CoDownloadAndWriteFile(fileUrl, info));
+                m_CoDownloadAndWriteFiles.Add(task);
             }
 
             //检查是否下载完成
-            CoroutineManager.Instance.StartCoroutine(CheckLoadFinish());
+            m_CheckLoadFinish = CoroutineManager.Instance.StartCoroutine(CheckLoadFinish());
 
             yield return null;
         }
@@ -498,8 +501,8 @@ namespace HotfixFrameWork
             if (m_IsDownloadFailed)  yield break;
             yield return new WaitForSeconds(m_FailRetryDelay);
             var writePath = DirectoryHelp.CreateDirectoryRecursive(fileInfo.Get_RelativePath(), GamePathConfig.LOCAL_ANDROID_TEMP_TARGET_1) + "/" + fileInfo.Get_MD5();
-            Debug.Log("writePath: " + writePath);
-            new HttpDownLoad().DownLoad(url, writePath, () =>{m_BundleCount++;});
+            m_HttpDownload = new HttpDownLoad();
+            m_HttpDownload.DownLoad(url, writePath, () =>{m_BundleCount++;});
         }
 
         /// <summary>
@@ -560,6 +563,19 @@ namespace HotfixFrameWork
                     }
                 }
             }
+        }
+
+
+        public void OnDisable() 
+        {
+            m_HttpDownload.isStop = true;
+            CoroutineManager.Instance.StopCoroutine(m_CoDownload);
+            CoroutineManager.Instance.StopCoroutine(m_CheckLoadFinish);
+            foreach (CoroutineTask single in m_CoDownloadAndWriteFiles)
+            {
+                CoroutineManager.Instance.StopCoroutine(single);
+            }
+            m_CoDownloadAndWriteFiles.Clear();
         }
 
 

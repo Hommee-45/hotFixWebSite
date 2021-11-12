@@ -1,0 +1,16 @@
+--[[
+    luaide  模板位置位于 Template/FunTemplate/NewFileTemplate.lua 其中 Template 为配置路径 与luaide.luaTemplatesDir
+    luaide.luaTemplatesDir 配置 https://www.showdoc.cc/web/#/luaide?page_id=713062580213505
+    author:{author}
+    time:2021-11-12 15:02:40
+]]
+
+function SoldierEvaluators_True(userData)
+    print("SoldierEvaluator_True data is "..userData)
+    return true
+end
+
+function SoldierEvaluators_False(userData)
+    print("SoldierEvaluator_False data is "..userData)
+    return true
+end

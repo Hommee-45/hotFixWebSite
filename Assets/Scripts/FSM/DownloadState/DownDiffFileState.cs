@@ -72,6 +72,11 @@ namespace HotfixFrameWork
                 m_IsCallback = false;
             }
         }
+        public override void DoAfterLeave()
+        {
+            base.DoAfterLeave();
+            m_PathFileDownloader.OnDisable();
+        }
 
         private void DownloadDiffFileCompleted(DownloadResType type)
         {

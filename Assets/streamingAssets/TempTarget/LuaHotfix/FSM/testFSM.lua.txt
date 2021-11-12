@@ -1,0 +1,43 @@
+--[[
+    luaide  模板位置位于 Template/FunTemplate/NewFileTemplate.lua 其中 Template 为配置路径 与luaide.luaTemplatesDir
+    luaide.luaTemplatesDir 配置 https://www.showdoc.cc/web/#/luaide?page_id=713062580213505
+    author:{author}
+    time:2021-11-12 15:38:07
+]]
+
+require "LuaHotfix/FSM/SoldierActions"
+require "LuaHotfix/FSM/FiniteStateMachine"
+require "LuaHotfix/FSM/SoldierEvaluators"
+
+local localAction = Action
+
+local function Idle_Action(userData)
+    return localAction.new(
+        "idle", 
+        SoldierActions_IdleInitialize, 
+        SoldierActions_IdleUpdate,
+        SoldierActions_IdleCleanUp, 
+        userData)
+end
+
+local function Die_Action(userData)
+    return localAction.new(
+        "die",
+        SoldierActions_DieInitialize,
+        SoldierActions_DieUpdate,
+        SoldierActions_DieCleanUp,
+        userData)
+end
+
+function SoldierLogic_FiniteStateMachine(userData)
+    local fsm = FiniteStateMachine.new(userData)
+
+    fsm:AddState("idle", Idle_Action(userData))
+    fsm:AddState("die", Die_Action(userData))
+
+    fsm:AddTransition("idle", "die", SoldierEvaluators_True(userData))
+    fsm:AddTransition("die", "idle", SoldierEvaluators_True(userData))
+
+    fsm:SetState('idle')
+    return fsm
+end

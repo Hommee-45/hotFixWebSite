@@ -1,0 +1,109 @@
+--[[
+    luaide  模板位置位于 Template/FunTemplate/NewFileTemplate.lua 其中 Template 为配置路径 与luaide.luaTemplatesDir
+    luaide.luaTemplatesDir 配置 https://www.showdoc.cc/web/#/luaide?page_id=713062580213505
+    author:{author}
+    time:2021-11-12 13:53:33
+]]
+
+require "LuaHotfix/FSM/Action"
+require "LuaHotfix/FSM/FiniteState"
+--require "LuaHotfix/FSM/FiniteStateTransition"
+
+FiniteStateMachine = {}
+
+function FiniteStateMachine.new(userData)
+    local fsm = {}
+
+    --状态机的数据
+    fsm.__currentState = nil
+    fsm.__states = {}
+    fsm.__transition = {}
+    fsm.__userData = userData
+
+    fsm.AddState = FiniteStateMachine.AddState
+    fsm.AddTransition = FiniteStateMachine.AddTransition
+    fsm.ContainState = FiniteStateMachine.ContainState
+    fsm.ContainTransition = FiniteStateMachine.ContainTransition
+    fsm.GetCurrentStateName = FiniteStateMachine.GetCurrentStateName
+    fsm.GetCurrentStateStatus = FiniteStateMachine.GetCurrentStateStatus
+    fsm.SetState = FiniteStateMachine.SetState
+    fsm.Update = FiniteStateMachine.Update
+
+    print("LuaHotfix.FSM.FiniteStateMachine Build!!")
+    return fsm
+    
+end
+
+-- 状态机是否包含改状态
+function FiniteStateMachine.ContainState(self, stateName)
+    return self.__states[stateName] ~= nil
+end
+
+-- 查询两个状态之间是否存在转换条件
+function FiniteStateMachine.ContainTransition(self, fromStateName, toStateName)
+    return self.__transition[fromStateName] ~= nil and self.__transition[fromStateName][toStateName] ~= nil
+end
+
+-- 返回当前运行的状态名称
+function FiniteStateMachine.GetCurrentStateName(self)
+    if self.__currentState then
+        return self.__currentState.__name
+    end
+end
+
+function FiniteStateMachine.GetCurrentStateStatus()
+    if self.__currentState then
+        return self.__currentState.__action.__status
+    end
+end
+
+-- 设置状态
+function FiniteStateMachine.SetState(self, stateName)
+    if self:ContainState(stateName) then
+        if self.__currentState ~= nil then
+            self.__currentState.__action:CleapUp()
+        end
+
+        self.__currentState = self.__states[stateName]
+        self.__currentState.__action:Initialize()
+    end
+end
+
+-- 添加状态
+function FiniteStateMachine.AddState(self, name, action)
+    self.__states[name] = FiniteState.new(name, action)
+end
+
+-- 添加转换条件
+function FiniteStateMachine.AddTransition(self, fromStateName, toStateName, evaluator)
+    if self:ContainState(fromStateName) and self:ContainState(toStateName) then
+        if self.__transition[fromStateName] == nil then
+            self.__transition[fromStateName] = {}
+        end
+        table.insert(self.__transition[fromStateName], FiniteStateTranstion.new(toStateName, evaluator))
+    end
+end
+
+local function  EvaluateTransition(self, transitions)
+    for index = 1, #transitions do
+        if transitions[index].__evaluator(self.__userData) then
+            return transitions[index].__toStateName
+        end
+    end
+end
+
+function FiniteStateMachine.Update(self, deltaTimeInMillis)
+    if self.__currentState then
+        local status = self:GetCurrentStateName()
+        if status == Action.Status.RUNNING then
+            self.__currentState.__action:Update(deltaTimeInMillis)
+        elseif status == Action.Status.TERMINATED then
+            local toStateName = EvaluateTransition(self, self.__transition[self.__currentState.__name])
+            if self.__states[tosStateName] ~= nil then
+                self.__currentState.__action:CleapUp()
+                self.__currentState = self.__states[toStateName]
+                self.__currentState.__action:Initialize()
+            end
+        end
+    end
+end

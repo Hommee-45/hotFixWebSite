@@ -1,0 +1,65 @@
+--[[
+    luaide  模板位置位于 Template/FunTemplate/NewFileTemplate.lua 其中 Template 为配置路径 与luaide.luaTemplatesDir
+    luaide.luaTemplatesDir 配置 https://www.showdoc.cc/web/#/luaide?page_id=713062580213505
+    author:{author}
+    time:2021-11-12 13:20:50
+]]
+
+
+Action = {}
+Action.Status = {
+    RUNNING = "RUNNING",
+    TERMINATED = "TERMINATED",
+    UNINTIALIZED = "UNINTIALIZED"
+}
+Action.Type = "Action"
+
+function Action.new(name, initializeFunction, updateFunction, cleanUpFunction, userData)
+    local action = {}
+    action.__cleanUpFunction = cleanUpFunction
+    action.__initializeFunction = initializeFunction
+    action.__updateFunction = updateFunction
+    action.__name = name or ""
+    action.__status = Action.Status.UNINTIALIZED
+    action.__type = Action.Type
+    action.__userData = userData
+
+    action.CleapUp = Action.CleanUp
+    action.Initialize = Action.Initialize
+    action.Update = Action.Update
+
+    return action
+end
+
+function Action.Initialize(self)
+    if self.__status == Action.Status.UNINTIALIZED then
+        if self.__initializeFunction ~= nil then
+            self.__initializeFunction(self.__userData)
+        end
+    end
+    self.__status = Action.Status.RUNNING
+end
+
+
+function Action.Update(self, deltaTimeInMillis)
+    if self.__status == Action.Status.TERMINATED then
+        return Action.Status.TERMINATED
+    elseif self.__status == Action.Status.RUNNING then
+        if self.__updateFunction then
+            self.__status = self.__updateFunction(deltaTimeInMillis, self.__userData)
+            assert(self.__status)
+        else
+            self.__status = Action.Status.TERMINATED
+        end
+    end
+    return self.__status
+end
+
+function Action.CleanUp()
+    if self.__status == Action.Status.TERMINATED then
+        if self.__cleanUpFunction then
+            self.__cleanUpFunction(self.__userData)
+        end
+    end
+    self.__status = Action.Status.UNINTIALIZED
+end

@@ -9,7 +9,7 @@ using System;
 public class HttpDownLoad {
 	
 	public float progress{get; private set;}
-	private bool isStop;
+	public bool isStop;
 	private Thread thread;
 	public bool isDone{get; private set;}
 

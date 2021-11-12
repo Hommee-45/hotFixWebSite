@@ -11,7 +11,7 @@ namespace HotfixFrameWork
     public class LuaScript : MonoBehaviour
     {
         public bool m_Root = false;
-        public LuaTable m_Table {get{return m_ScriptEnv;}}
+        public LuaTable Table {get{return m_ScriptEnv;}}
         public String LuaPath{get{return m_LuaPath;} set{m_LuaPath = value;}}
         private string m_LuaPath;
         private Action m_LuaOnEnable;
@@ -27,7 +27,7 @@ namespace HotfixFrameWork
         public void Awake() 
         {
             if (string.IsNullOrEmpty(LuaPath)) return;
-            if (m_Table == null) Init();
+            if (Table == null) Init();
             if (m_LuaAwake != null) m_LuaAwake();
         }
 
@@ -74,6 +74,11 @@ namespace HotfixFrameWork
             m_ScriptEnv.Set("self", this);
 
             Byte[] lua = LuaEnvMgr.Instance.GetLuaText(LuaPath);
+
+            if (meta == null)
+            {
+                Debug.LogError("meta 为空");
+            }
             if (lua == null)
             {
                 Debug.LogError("byte lua 为空");
@@ -81,6 +86,10 @@ namespace HotfixFrameWork
             if (m_ScriptEnv == null)
             {
                 Debug.LogError("m_ScriptEnv为空");
+            }
+            if (Table == null)
+            {
+                Debug.LogError("Table为空");
             }
             m_LuaEnv.DoString(lua, "LuaScript", m_ScriptEnv);
             m_ScriptEnv.Get("Awake", out m_LuaAwake);
