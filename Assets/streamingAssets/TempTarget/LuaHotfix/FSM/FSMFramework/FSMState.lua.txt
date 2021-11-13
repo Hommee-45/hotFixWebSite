@@ -1,0 +1,88 @@
+--[[
+    luaide  模板位置位于 Template/FunTemplate/NewFileTemplate.lua 其中 Template 为配置路径 与luaide.luaTemplatesDir
+    luaide.luaTemplatesDir 配置 https://www.showdoc.cc/web/#/luaide?page_id=713062580213505
+    author:{author}
+    time:2021-11-13 15:07:31
+]]
+
+require ("LuaHotfix/Global")
+require ("LuaHotfix/FSM/FSMFramework/FSM_Enum")
+
+local Object = require ("LuaHotfix/Base/classic")
+local FSMState = Object.extend()
+
+-- 初始化
+function FSMState.new(self, fsmSystem)
+    FSMState.super.new(self, fsmSystem)
+    FSMState.m_fsmSystem = fsmSystem
+    FSMState.m_StateID = FSMStateID.NullState
+    FSMState.m_TransitionStateDict  = {}            --<TransitionID, StateID>
+
+    print("This is FSMState new()")
+end
+
+-- 获取该状态ID
+function FSMState:GetStateID()
+    return self.m_StateID
+end
+
+-- 添加过渡条件
+function FSMState.AddTransition(self, transitionID, targetStateID)
+    if transitionID == FSMTransition.NullTransition then
+        Log.LogError("Not allow NullTransition")
+        return
+    end
+    if targetStateID == FSMStateID.NullState then
+        Log.LogError("Not allow NullStateID")
+        return
+    end
+    if ContainsKey(self.m_TransitionStateDict, transitionID) then
+        Log.LogError("this key has already in dict")
+        return
+    end
+    table.insert(self.m_TransitionStateDict, transitionID, targetStateID)
+end
+
+-- 删除装换条件
+function FSMState.DeleteTransition(self, transitionID)
+    if transitionID == FSMTransition.NullTransition then
+        Log.LogError("Not allow NullTransition")
+        return
+    end
+    if ~ContainsKey(self.m_TransitionStateDict, transitionID) then
+        Log.LogError("Not have such" ..transitionID.." key")
+        return 
+    end
+    self.m_TransitionStateDict = RemoveByKey(self.m_TransitionStateDict, transitionID)
+end
+
+-- 获取当前转换条件下的ID
+function FSMState.GetOutputState(self, transitionID)
+    if ContainsKey(self.m_TransitionStateDict, transitionID) then
+        return self.m_TransitionStateDict[transitionID]
+    end
+    return FSMTransition.NullTransition
+end
+
+-- 进入新状态之前做的事情
+function FSMState:DoBeforEnter()   
+    print("This is FSMState DoBeforEnter")
+end
+
+-- 离开当前状态时做的事情
+function FSMState:DoAfterLeave()
+    print("This is FSMState DoAfterLeave")
+end
+
+-- 当前状态所做的事情(放在Udate)
+function  FSMState:Act(obj)  
+    print("This is FSMState Act")
+end
+
+--判断装换条件
+function FSMState:Reason()
+    print("This is FSMState Reason")
+end
+
+return FSMState
+

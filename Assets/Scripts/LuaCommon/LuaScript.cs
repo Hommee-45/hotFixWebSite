@@ -97,7 +97,7 @@ namespace HotfixFrameWork
             m_ScriptEnv.Get("Update", out m_LuaUpdate);
             m_ScriptEnv.Get("OnEnable", out m_LuaOnEnable);
             m_ScriptEnv.Get("OnDisable", out m_LuaOnDisable);
-            m_ScriptEnv.Get("OnDestory", out m_LuaOnDestroy);
+            m_ScriptEnv.Get("OnDestroy", out m_LuaOnDestroy);
         }
         
     }

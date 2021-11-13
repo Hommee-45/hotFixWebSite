@@ -1,12 +1,22 @@
 
 require ("LuaHotfix/Global")
+
 local breakSocketHandle,debugXpCall = require("LuaHotfix/LuaDebug")("localhost",7003) 
 function Main()
     Log.Info("Fuck Yout ASS")
     print("Fuck Yout ASS")
     GameMgr.AddSingle("LuaHotfix/Single/Event", "Event", true)
-    SoldierLogic_FiniteStateMachine("hellow")
+    GameMgr.AddSingle("LuaHotfix/Single/FSMRunning", "FSMRunning", true)
 
+    --SoldierLogic_FiniteStateMachine("hellow")
+
+end
+
+
+
+function TestFSMState()
+    FSMState = require ("LuaHotfix/FSM/FSMFramework/FSMState")
+    
 end
 
 

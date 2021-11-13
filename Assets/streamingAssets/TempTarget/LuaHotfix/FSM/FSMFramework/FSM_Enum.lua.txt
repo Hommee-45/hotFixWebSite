@@ -1,0 +1,36 @@
+--[[
+    luaide  模板位置位于 Template/FunTemplate/NewFileTemplate.lua 其中 Template 为配置路径 与luaide.luaTemplatesDir
+    luaide.luaTemplatesDir 配置 https://www.showdoc.cc/web/#/luaide?page_id=713062580213505
+    author:{author}
+    time:2021-11-13 14:29:13
+]]
+
+FSMDownloadState = 
+{
+    DownloadFail = -1,
+    Downloading = 0,
+    DownSuccess = 1
+}
+
+FSMTransition =
+{
+    NullTransition = 1,         -- 空的转换条件
+    Download_Failed = 2,            -- 下载失败
+    Download_Success = 3,           -- 下载成功
+
+    MergeDiffFileSuccess = 4,       -- 合并差分文件成功
+    MergeDiffFileFailed = 5,        -- 合并差分文件失败
+}
+
+FSMStateID =
+{
+    NullState = 1,                  -- 空的状态
+    DownloadVersiontFile = 2,       -- 下载版本文件
+    DownDESKey = 3,                 -- 下载DESKey
+    DownloadUpdateListFile = 4,     -- 下载更新配置列表
+    DownloadDiffFile = 5,           -- 下载差分文件
+    VerifyFileIntegrity = 6,        -- 校验文件完成
+    MergeDiffFile = 7,              -- 合并差分文件
+    DownloadTerminate = 8,          -- 终止下载(一般指下载失败)
+    DownloadFinished = 9,           -- 所有下载完成
+}

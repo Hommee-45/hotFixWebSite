@@ -59,6 +59,18 @@ function  ContainsValue(tab, value)
     end
     return false
 end
+--[[
+    检查一个键是否在table中
+]]
+function ContainsKey(tab, key)
+    local t = IsTable(tab)
+    for k, v in pairs(t) do
+        if k == key then
+            return true
+        end
+    end
+    return false
+end
 
 --[[
     从table中删除制定value
@@ -73,4 +85,18 @@ function RemoveByValue(tab,value)
         end
     end
     return false
+end
+
+--[[
+    从table中删除所有数据
+    table的key必须是连续的1， 2， 3， 4
+]]
+function RemoveTableData(table)
+    if table ~= nil then
+        for i = #table, 1, -1 do
+            if table[i] ~= nil then
+                table.remove(table, i)
+            end
+        end
+    end
 end

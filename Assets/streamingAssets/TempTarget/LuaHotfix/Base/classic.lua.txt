@@ -1,0 +1,39 @@
+--[[
+    luaide  模板位置位于 Template/FunTemplate/NewFileTemplate.lua 其中 Template 为配置路径 与luaide.luaTemplatesDir
+    luaide.luaTemplatesDir 配置 https://www.showdoc.cc/web/#/luaide?page_id=713062580213505
+    author:{author}
+    time:2021-11-13 14:47:59
+]]
+
+
+local Object = {}
+Object.__index = Object
+
+function  Object:new()
+
+end
+
+function Object:extend()
+    local cls = {}
+    for k, v in pairs(self) do
+        if k:find("__") == 1 then
+            cls[k] = v
+        end
+    end
+    cls.__index = cls
+    cls.super = self
+    setmetatable(cls, self)
+    return cls
+end
+
+function Object:__tostring()
+    return "Object"
+end
+
+function Object:__call(...)
+    local obj = setmetatable({}, self)
+    obj:new(...)
+    return obj
+end
+
+return Object

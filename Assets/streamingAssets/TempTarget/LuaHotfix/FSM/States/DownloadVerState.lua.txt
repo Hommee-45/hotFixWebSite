@@ -1,0 +1,43 @@
+--[[
+    luaide  模板位置位于 Template/FunTemplate/NewFileTemplate.lua 其中 Template 为配置路径 与luaide.luaTemplatesDir
+    luaide.luaTemplatesDir 配置 https://www.showdoc.cc/web/#/luaide?page_id=713062580213505
+    author:{author}
+    time:2021-11-13 16:10:56
+]]
+require ("LuaHotfix/FSM/FSMFramework/FSM_Enum")
+
+
+local FSMState = require ("LuaHotfix/FSM/FSMFramework/FSMState")
+local DownloadVerState = FSMState.extend()
+
+
+function DownloadVerState.new(self, fsmSystem)
+    DownloadVerState.super.new(self, fsmSystem)
+    DownloadVerState.m_StateID = FSMStateID.DownloadVersiontFile
+    DownloadVerState.m_DownloadState = nil
+    DownloadVerState.m_IsCanDownload = true
+    print("This is DownloadVerState new()")
+end
+
+function DownloadVerState.DoBeforEnter()
+    print("This is DownloadVerState DoBeforEnter()")
+end
+
+function DownloadVerState.Act()
+    print("This is DownloadVerState Act()")
+end
+
+function DownloadVerState.DoAfterLeave()
+    print("This is DownloadVerState DoAfterLeave()")
+end
+
+function DownloadVerState.Reason()
+    print("This is DownloadVerState Reason()")
+end
+
+
+
+
+
+
+
