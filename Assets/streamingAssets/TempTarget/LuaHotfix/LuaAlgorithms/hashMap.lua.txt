@@ -1,0 +1,111 @@
+--[[
+    luaide  模板位置位于 Template/FunTemplate/NewFileTemplate.lua 其中 Template 为配置路径 与luaide.luaTemplatesDir
+    luaide.luaTemplatesDir 配置 https://www.showdoc.cc/web/#/luaide?page_id=713062580213505
+    author:{author}
+    time:2021-11-14 14:47:17
+]]
+local hashMap = {}
+
+hashMap.__index = hashMap
+hashMap.Node = {}
+hashMap.Node.__index = hashMap.Node
+
+function hashMap.Node.create(key, value)
+    local s = {}
+    setmetatable(s, hashMap.Node)
+    s.key = key
+    s.value = value
+    s.next = nil
+
+    return s
+end
+
+function hashMap.create(hash)
+    local s = {}
+    setmetatable(s, hashMap)
+    
+    if hash == nil then
+        hash = function(x) return x end
+    end
+    s.s = {}
+    s.N = 0
+    s.hash = hash
+    return s
+end
+
+function hashMap:put(key, value)
+    local h = self.hash(key)
+    local x = self.s[h]
+    local found = false
+    while x ~= nil do
+        if x.key == key then
+            found = true
+            x.value = value
+            break
+        end
+        x = x.next
+    end
+
+    if found == false then
+        local old = self.s[h]
+        self.s[h] = hashMap.Node.create(key, value)
+        self.s[h].next = old
+        self.N = self.N + 1
+    end
+end
+
+function hashMap:get(key)
+    local h = self.hash(key)
+    local x = self.s[h]
+    while x ~= nil do
+        if x.key == key then
+            return x.value
+        end
+        x = x.next
+    end
+    return nil
+end
+
+function hashMap:containsKey(key)
+    local h = self.hash(key)
+    local x = self.s[h]
+    while x ~= nil do
+        if x.key == key then
+            return true
+        end
+        x = x.next
+    end
+    return false
+end
+
+function hashMap:size()
+    return self.N
+end
+
+function hashMap:isEmpty()
+    return self.N == 0
+end
+
+function hashMap:remove(key)
+    local h = self.hash(key)
+    local x = self.s[h]
+    local prev_x = nil
+    while x ~= nil do
+        if x.key == key then
+            local value = x.value
+            if prev_x == nil then
+                self.s[h] = x.next        -- 往前移一位
+            else
+                prev_x.next = x.next
+            end
+            self.N = self.N - 1
+            return value
+        end
+        prev_x = x
+        x = x.next
+    end
+    return nil
+end
+
+
+return hashMap

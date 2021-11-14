@@ -4,19 +4,34 @@ require ("LuaHotfix/Global")
 local breakSocketHandle,debugXpCall = require("LuaHotfix/LuaDebug")("localhost",7003) 
 function Main()
     Log.Info("Fuck Yout ASS")
-    print("Fuck Yout ASS")
     GameMgr.AddSingle("LuaHotfix/Single/Event", "Event", true)
     GameMgr.AddSingle("LuaHotfix/Single/FSMRunning", "FSMRunning", true)
-
+    testSwitchCase()
     --SoldierLogic_FiniteStateMachine("hellow")
 
 end
 
+function testSwitchCase()
+    local switch = {
+        [1] = function()
+            Log.Info("case1")
+        end,
+        [2] = function()
+            Log.Info("case2")
+        end,
+        [3] = function()
+            Log.Info("case3")
+        end
+    }
 
-
-function TestFSMState()
-    FSMState = require ("LuaHotfix/FSM/FSMFramework/FSMState")
-    
+    local a = 1
+    local f = switch[6]
+    if f then
+        Log.Info(type(f))
+        f()
+    else
+        Log.Info("case default")
+    end
 end
 
 

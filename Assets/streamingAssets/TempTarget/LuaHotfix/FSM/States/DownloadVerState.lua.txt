@@ -8,14 +8,14 @@ require ("LuaHotfix/FSM/FSMFramework/FSM_Enum")
 
 
 local FSMState = require ("LuaHotfix/FSM/FSMFramework/FSMState")
-local DownloadVerState = FSMState.extend()
+DownloadVerState = FSMState:extend()
 
 
 function DownloadVerState.new(self, fsmSystem)
-    DownloadVerState.super.new(self, fsmSystem)
-    DownloadVerState.m_StateID = FSMStateID.DownloadVersiontFile
-    DownloadVerState.m_DownloadState = nil
-    DownloadVerState.m_IsCanDownload = true
+    self.super.new(self, fsmSystem)
+    self.m_StateID = FSMStateID.DownloadVersiontFile
+    self.m_DownloadState = nil
+    self.m_IsCanDownload = true
     print("This is DownloadVerState new()")
 end
 

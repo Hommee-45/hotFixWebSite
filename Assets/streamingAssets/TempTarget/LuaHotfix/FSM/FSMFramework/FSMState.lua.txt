@@ -8,15 +8,15 @@
 require ("LuaHotfix/Global")
 require ("LuaHotfix/FSM/FSMFramework/FSM_Enum")
 
-local Object = require ("LuaHotfix/Base/classic")
-local FSMState = Object.extend()
+
+local FSMState = classTemplate:extend()
 
 -- 初始化
 function FSMState.new(self, fsmSystem)
     FSMState.super.new(self, fsmSystem)
     FSMState.m_fsmSystem = fsmSystem
     FSMState.m_StateID = FSMStateID.NullState
-    FSMState.m_TransitionStateDict  = {}            --<TransitionID, StateID>
+    FSMState.m_TransitionStateDict  = hashMapTemplate.create()            --<TransitionID, StateID>
 
     print("This is FSMState new()")
 end
@@ -36,11 +36,11 @@ function FSMState.AddTransition(self, transitionID, targetStateID)
         Log.LogError("Not allow NullStateID")
         return
     end
-    if ContainsKey(self.m_TransitionStateDict, transitionID) then
+    if self.m_TransitionStateDict:containsKey(transitionID) then
         Log.LogError("this key has already in dict")
         return
     end
-    table.insert(self.m_TransitionStateDict, transitionID, targetStateID)
+    self.m_TransitionStateDict:put(transitionID, targetStateID)
 end
 
 -- 删除装换条件
@@ -49,17 +49,17 @@ function FSMState.DeleteTransition(self, transitionID)
         Log.LogError("Not allow NullTransition")
         return
     end
-    if ~ContainsKey(self.m_TransitionStateDict, transitionID) then
+    if ~self.m_TransitionStateDict:containsKey(transitionID) then
         Log.LogError("Not have such" ..transitionID.." key")
         return 
     end
-    self.m_TransitionStateDict = RemoveByKey(self.m_TransitionStateDict, transitionID)
+    self.m_TransitionStateDict:remove(transitionID)
 end
 
 -- 获取当前转换条件下的ID
 function FSMState.GetOutputState(self, transitionID)
-    if ContainsKey(self.m_TransitionStateDict, transitionID) then
-        return self.m_TransitionStateDict[transitionID]
+    if self.m_TransitionStateDict:containsKey(transitionID) then
+        return self.m_TransitionStateDict:get(transitionID)
     end
     return FSMTransition.NullTransition
 end
