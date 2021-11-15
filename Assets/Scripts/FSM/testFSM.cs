@@ -15,7 +15,7 @@ public class testFSM : MonoBehaviour
     }
     void Start()
     {
-        m_FSMSystem = FSMSystemManager.Instance;
+        //m_FSMSystem = FSMSystemManager.Instance;
 
     }
 
@@ -24,7 +24,7 @@ public class testFSM : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        m_FSMSystem.Update();
-        CoroutineManager.Instance.Tick();
+        // m_FSMSystem.Update();
+        // CoroutineManager.Instance.Tick();
     }
 }

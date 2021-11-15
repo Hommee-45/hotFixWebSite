@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using XLua;
 
+[LuaCallCSharp]
 public struct CoroutineTask
 {
     public IEnumerator m_Routine;
@@ -15,7 +17,7 @@ public struct CoroutineTask
 
 }
 
-
+[LuaCallCSharp]
 public class CoroutineManager
 {
     private static CoroutineManager m_Instance;

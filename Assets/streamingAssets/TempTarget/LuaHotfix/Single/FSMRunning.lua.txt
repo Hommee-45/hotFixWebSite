@@ -8,13 +8,23 @@
 require "LuaHotfix/FSM/FSMFramework/FSMSystemManager"
 
 local FSMSystemSingle = {}
-
+local isCanHotFix = false
 function Start()
-    FSMSystemSingle = FSMSystemManager:Intance()
+    --FSMSystemSingle = FSMSystemManager:Intance()
+    FSMSystemSingle = HT.FSMSystemManager.Instance
 end
 
 function Update()
-    FSMSystemSingle:Update()
+    Log.Info("FSMRunning Update")
+    if UE.Input.GetKeyDown(UE.KeyCode.K) then
+        isCanHotFix = true
+    end
+
+    if isCanHotFix then
+        FSMSystemSingle:Update()
+        CS.CoroutineManager.Instance:Tick()
+    end
+
 end
 
 function OnDestory()

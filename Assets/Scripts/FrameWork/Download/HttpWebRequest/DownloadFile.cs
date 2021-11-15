@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-
+using XLua;
 namespace HotfixFrameWork
 {
 
+    [LuaCallCSharp]
     public enum DownloadResType
     {
         DownloadFail,
@@ -25,7 +26,7 @@ namespace HotfixFrameWork
         public string version;
     }
 
-
+    [LuaCallCSharp]
     public class DownloadVersionFile
     {
         private string m_Url;
