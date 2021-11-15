@@ -6,8 +6,10 @@ function Main()
     Log.Info("Fuck Yout ASS")
     GameMgr.AddSingle("LuaHotfix/Single/Event", "Event", true)
     GameMgr.AddSingle("LuaHotfix/Single/FSMRunning", "FSMRunning", true)
-    testSwitchCase()
+    --testSwitchCase()
     --SoldierLogic_FiniteStateMachine("hellow")
+    --testList()
+    testQueue()
 
 end
 
@@ -34,6 +36,48 @@ function testSwitchCase()
     end
 end
 
+function testList()
+    local s = listTemplate.create()
+    s:add(1)
+    s:add(2)
+    s:add(3)
+    s:set(2, 4)
+
+    for index, val in pairs(s:enumerate()) do
+        print(index, val)
+    end
+
+    for i=0, s:size() - 1 do
+        print(s:get(i))
+    end
+
+    print(s:size())
+    print(s:isEmpty())
+    s:removeAt(0)
+    s:remove(2)
+    s:removeAt(0)
+
+    print(s:size())
+end
+
+function testQueue()
+    local s = queueTemplate.create()
+    s:enqueue(10)
+    s:enqueue(20)
+    s:enqueue(30)
+    print(s:size())
+    print(s:isEmpty())
+    for key, value in pairs(s:enumerate()) do
+        print(key, value)
+    end
+    print(s:dequeue())
+    print(s:dequeue())
+    print(s:dequeue())
+    
+    print(s:isEmpty())
+    print(s:size())
+
+end
 
 function AllComplete(data)
     print("AllComplete")

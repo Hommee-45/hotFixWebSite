@@ -6,3 +6,5 @@
 ]]
 
 hashMapTemplate = require("LuaHotfix/LuaAlgorithms/hashMap")
+listTemplate = require("LuaHotfix/LuaAlgorithms/list")
+queueTemplate =require("LuaHotfix/LuaAlgorithms/queue")

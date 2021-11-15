@@ -13,5 +13,8 @@
         "library/":true,
         "**/*.mat":true,
     },
+    "files.associations": {
+        "*.txt" : "lua"
+    },
     "editor.snippetSuggestions": "bottom"
 }
