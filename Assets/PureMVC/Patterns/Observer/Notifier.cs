@@ -21,7 +21,7 @@ namespace PureMVC.Patterns.Observer
         {
             get
             {
-                return Patterns.Facade.Face.GetInstance(() => new Facade.Facade());
+                return Patterns.Facade.Facade.GetInstance(() => new Facade.Facade());
             }
         }
     }
