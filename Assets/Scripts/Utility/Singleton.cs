@@ -2,17 +2,36 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Singleton : MonoBehaviour
+namespace PureMVC.Tutorial
 {
-    // Start is called before the first frame update
-    void Start()
+
+
+    public class Singleton<T> : MonoBehaviour
     {
+        static Singleton() { }
+        protected  Singleton() { }
+        private static volatile Singleton<T> m_Instance = null;
+        protected readonly object syncRoot = new object();
+        protected static readonly object staticSyncRoot = new object();
+
+        protected static Singleton<T> Instance
+        {
+            get
+            {
+                return m_Instance;
+            }
+        }
+
         
+        protected virtual void Awake()
+        {
+            m_Instance = this;
+        }
+        private void OnDestroy()
+        {
+            m_Instance = null;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
+

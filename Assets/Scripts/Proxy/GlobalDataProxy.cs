@@ -2,7 +2,7 @@
 using PureMVC.Patterns.Proxy;
 using System.IO;
 using System;
-using Newtonsoft.Json;
+using LitJson;
 
 namespace PureMVC.Tutorial
 {
@@ -30,7 +30,7 @@ namespace PureMVC.Tutorial
         }
         public void SerializeData()
         {
-            string jsonStr = JsonConvert.SerializeObject(GetGlobalData);
+            string jsonStr = JsonMapper.ToJson(GetGlobalData);
             if (!Directory.Exists(Application.streamingAssetsPath))
             {
                 Directory.CreateDirectory(Application.streamingAssetsPath);
@@ -45,7 +45,7 @@ namespace PureMVC.Tutorial
                 Directory.CreateDirectory(Application.streamingAssetsPath);
             }
             string jsonStr = File.ReadAllText(Application.streamingAssetsPath + "/" + "GlobalData.json");
-            Data = (GlobalData)JsonConvert.DeserializeObject(jsonStr);
+            Data = JsonMapper.ToObject<GlobalData>(jsonStr);
         }
         public void CostCup(CurrencyType currencyType, int costCupNumber)
         {

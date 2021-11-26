@@ -14,7 +14,7 @@ namespace PureMVC.Patterns.Observer
         /// <param name="type">此条消息通知的类型</param>
         public virtual void SendNotification(string notificationName, object body = null, string type = null)
         {
-
+            Facade.SendNotification(notificationName, body, type);
         }
 
         protected IFacade Facade

@@ -9,7 +9,8 @@ function Main()
     --testSwitchCase()
     --SoldierLogic_FiniteStateMachine("hellow")
     --testList()
-    testQueue()
+    --testQueue()
+    testStack()
 
 end
 
@@ -77,6 +78,19 @@ function testQueue()
     print(s:isEmpty())
     print(s:size())
 
+end
+
+function testStack()
+    local s = stackTemplate.create()
+    s:push(1)
+    s:push(2)
+    s:push(3)
+    print((s:size()))
+    print(s:isEmpty())
+    print(s:pop())
+    for index, val in pairs(s:enumerate()) do
+        print(index, val)
+    end
 end
 
 function AllComplete(data)
